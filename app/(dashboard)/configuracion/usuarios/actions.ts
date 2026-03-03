@@ -134,15 +134,8 @@ export async function createUserFromRequest(
   locationId?: string | null
 ) {
   try {
-    console.log("[createUser] Starting for:", email, "role:", role);
-
     const { supabaseAdmin } = await import("@/lib/supabase/admin");
-    console.log("[createUser] Admin client created");
-
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    console.log("[createUser] Service key present:", !!serviceKey);
-    console.log("[createUser] Service key length:", serviceKey?.length);
-    console.log("[createUser] First 20 chars:", serviceKey?.substring(0, 20));
 
     const { data: newUser, error: createError } =
       await supabaseAdmin.auth.admin.createUser({
@@ -152,11 +145,7 @@ export async function createUserFromRequest(
         user_metadata: { full_name: fullName },
       });
 
-    console.log("[createUser] Result:", {
-      userId: newUser?.user?.id,
-      error: createError?.message,
-      errorCode: (createError as { code?: string } | null)?.code,
-    });
+
 
     if (createError) {
       return {
@@ -168,7 +157,7 @@ export async function createUserFromRequest(
       return { error: "Usuario no fue creado — respuesta vacía" };
     }
 
-    console.log("[createUser] User created:", newUser.user.id);
+
 
     // Wait for trigger to create profile
     await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -196,7 +185,7 @@ export async function createUserFromRequest(
         { onConflict: "id" }
       );
 
-    console.log("[createUser] Profile upsert:", profileError?.message ?? "OK");
+
 
     if (profileError) {
       console.error("Profile upsert error:", profileError);

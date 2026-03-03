@@ -5,8 +5,8 @@
 ---
 
 ## CURRENT BLOCK
-- **Block Number:** 15-C (cleanup)
-- **Block Name:** Pre-Production Root Cleanup
+- **Block Number:** 16-A (cleanup)
+- **Block Name:** Deep Code Cleanup
 - **Status:** DONE
 - **Started:** 2026-03-03
 - **Completed:** 2026-03-03
@@ -14,30 +14,19 @@
 ---
 
 ## LAST COMPLETED BLOCK
-- **Block Number:** 15-C (cleanup)
-- **Block Name:** Pre-Production Root Cleanup
+- **Block Number:** 16-A (cleanup)
+- **Block Name:** Deep Code Cleanup
 - **Completed:** 2026-03-03
 - **Commit:** TBD
 
 ---
 
 ### Files Modified
-- `/AUDITORIA_COMPLETA_SISTEMA_INVENTARIO_17_02_2026.md` (DELETED)
-- `/AUDITORIA_INVENTARIO_22_02_2026.md` (DELETED)
-- `/AUDIT_09_02_10AM_demofuncional.md` (DELETED)
-- `/AUDIT_09_02_2PM_optimizaciones.md` (DELETED)
-- `/AUDIT_09_02_4PM_optimizaciones.md` (DELETED)
-- `/AUDIT_18_02_12PM_reestructuracion_productos_variantes.md` (DELETED)
-- `/FEATURE_STOCK_DETALLADO_EXPANDIBLE.md` (DELETED)
-- `/IMPLEMENTACION_VARIANTES.md` (DELETED)
-- `/mcp_audit_26_02.md` (DELETED)
-- `/configs.txt` (DELETED)
-- `/estructura-app.txt` (DELETED)
-- `/estructura-components.txt` (DELETED)
-- `/estructura-proyecto.txt` (DELETED)
-- `/ts_errors.txt` (DELETED)
-- `/tsc_errors.txt` (DELETED)
-- `/update_sizes.sql` (DELETED)
+- `lib/utils/sounds.ts` (MODIFIED — removed dev logs)
+- `lib/notifications.ts` (MODIFIED — removed dev logs)
+- `app/(dashboard)/ventas/pos-client.tsx` (MODIFIED — removed dev logs)
+- `app/(dashboard)/inventario/inventory-client.tsx` (MODIFIED — removed dev logs)
+- `app/(dashboard)/configuracion/usuarios/actions.ts` (MODIFIED — removed dev logs)
 
 ---
 
@@ -61,9 +50,9 @@
 ---
 
 ## NEXT BLOCK
-- **Block:** 16-A
+- **Block:** 16-B
 - **Name:** TBD
-- **Dependencies:** 15-C complete ✅
+- **Dependencies:** 16-A complete ✅
 - **Scope:** TBD
 
 ---
@@ -92,4 +81,5 @@
 | 14-A | POS Stall Selection & Seller Permissions | ✅ DONE | 2026-03-01 | 9741d79 |
 | 14-B | Restore Delivery Info in Modal + Discount Idempotency | ✅ DONE | 2026-03-01 | 14f7d56 |
 | 15-B | Map WhatsApp Templates to Order Status Changes | ✅ DONE | 2026-03-01 | 2f1d723 |
-| 15-C | Pre-Production Root Cleanup | ✅ DONE | 2026-03-03 | TBD |
+| 15-C | Pre-Production Root Cleanup | ✅ DONE | 2026-03-03 | 1ad0c99 |
+| 16-A | Deep Code Cleanup (Logs & Dead Code) | ✅ DONE | 2026-03-03 | TBD |

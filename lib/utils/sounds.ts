@@ -22,14 +22,14 @@ export function playBeep() {
     oscillator.start(audioContext.currentTime);
     oscillator.stop(audioContext.currentTime + 0.1);
   } catch (error) {
-    console.log("Audio not supported");
+    // Audio fallback silently
   }
 }
 
 export function playSuccessSound() {
   try {
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    
+
     // Play a pleasant two-tone success sound
     const playTone = (frequency: number, startTime: number, duration: number) => {
       const oscillator = audioContext.createOscillator();
@@ -55,14 +55,14 @@ export function playSuccessSound() {
     playTone(523.25, audioContext.currentTime, 0.15); // C5
     playTone(659.25, audioContext.currentTime + 0.15, 0.2); // E5
   } catch (error) {
-    console.log("Audio not supported");
+    // Audio fallback silently
   }
 }
 
 export function playCashRegisterSound() {
   try {
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    
+
     // Simulate cash register "cha-ching" sound
     const playTone = (frequency: number, startTime: number, duration: number, volume: number = 0.3) => {
       const oscillator = audioContext.createOscillator();
@@ -85,16 +85,16 @@ export function playCashRegisterSound() {
     };
 
     const now = audioContext.currentTime;
-    
+
     // "Cha" part
     playTone(800, now, 0.08, 0.4);
     playTone(600, now + 0.02, 0.08, 0.3);
-    
+
     // "Ching" part
     playTone(1200, now + 0.12, 0.15, 0.35);
     playTone(1000, now + 0.14, 0.15, 0.25);
     playTone(1400, now + 0.16, 0.2, 0.2);
   } catch (error) {
-    console.log("Audio not supported");
+    // Audio fallback silently
   }
 }

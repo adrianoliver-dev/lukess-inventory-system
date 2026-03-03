@@ -439,7 +439,7 @@ export default function POSClient({
       const supabase = createClient();
 
       // 1. Create sale record
-      console.log("[finalizeSale] Creating sale...", { organizationId, locationId: effectiveLocationId, total });
+
       const { data: sale, error: saleError } = await supabase
         .from("sales")
         .insert({
@@ -463,7 +463,7 @@ export default function POSClient({
         setProcessing(false);
         return;
       }
-      console.log("[finalizeSale] Sale created:", sale.id);
+
 
       // 2. Create sale items (con talla y ubicación)
       const saleItems = cart.map((item) => ({
@@ -477,7 +477,7 @@ export default function POSClient({
         subtotal: item.product.price * item.quantity,
       }));
 
-      console.log("[finalizeSale] sale_items insert...", saleItems);
+
       const { error: itemsError } = await supabase
         .from("sale_items")
         .insert(saleItems);
@@ -488,7 +488,7 @@ export default function POSClient({
         setProcessing(false);
         return;
       }
-      console.log("[finalizeSale] sale_items insertados correctamente");
+
 
       // 3. Actualizar inventario (por talla y ubicación)
       for (const item of cart) {
@@ -515,7 +515,7 @@ export default function POSClient({
           }
         }
 
-        console.log("[finalizeSale] Deducting stock for", item.product.name, "location:", saleLocationId, "qty:", item.quantity, "size:", item.size || null, "color:", item.color || null);
+
 
         // Obtener cantidad actual
         let fetchQuery = supabase
@@ -562,7 +562,7 @@ export default function POSClient({
           throw new Error(`Error al actualizar inventario de ${item.product.name}${item.size ? ` (talla ${item.size})` : ""}`);
         }
 
-        console.log("[finalizeSale] Stock deducted for", item.product.name, "→ new qty:", newQuantity);
+
       }
 
       // Show success modal

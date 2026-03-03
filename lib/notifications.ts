@@ -35,12 +35,6 @@ export async function sendOrderStatusEmail(
 ): Promise<void> {
   const emailType = STATUS_TO_EMAIL_TYPE[newStatus]
 
-  console.log('[email] llamado', {
-    status: newStatus,
-    email: order.customer_email,
-    notify: order.notify_email,
-    emailType: emailType ?? 'sin mapeo — no se envía',
-  })
 
   if (!emailType) return
   if (!order.notify_email) return
@@ -49,7 +43,6 @@ export async function sendOrderStatusEmail(
   const landingUrl = process.env.LANDING_URL ?? 'https://lukess-home.vercel.app'
 
   try {
-    console.log('[email] fetch →', landingUrl)
 
     const res = await fetch(`${landingUrl}/api/send-email`, {
       method: 'POST',
@@ -74,7 +67,6 @@ export async function sendOrderStatusEmail(
       }),
     })
 
-    console.log('[email] response', { ok: res.ok, status: res.status })
 
     if (!res.ok) {
       const body = await res.text()

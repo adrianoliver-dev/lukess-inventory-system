@@ -214,7 +214,7 @@ export default function InventoryClient({
     };
 
     // Sorting
-    console.log('🔄 Ordenando por:', sortField, sortDirection);
+
 
     filtered.sort((a, b) => {
       let compareValue = 0;
@@ -232,7 +232,6 @@ export default function InventoryClient({
         case "stock":
           const stockA = calcTotalStock(a);
           const stockB = calcTotalStock(b);
-          console.log(`📊 Stock: ${a.name}=${stockA}, ${b.name}=${stockB}`);
           compareValue = stockA - stockB;
           break;
       }
@@ -343,7 +342,6 @@ export default function InventoryClient({
     const supabase = createClient();
 
     try {
-      console.log('🔄 Reactivando producto:', productId);
 
       const { error } = await supabase
         .from("products")
@@ -356,7 +354,6 @@ export default function InventoryClient({
         return;
       }
 
-      console.log('✅ Producto reactivado correctamente');
       toast.success(`"${productName}" reactivado correctamente`);
       fetchProducts(showInactive);
     } catch (error: any) {
@@ -1468,7 +1465,7 @@ export default function InventoryClient({
 
             if (deleteModal.isActive) {
               // DESACTIVAR (soft delete)
-              console.log('🗑️ Desactivando producto:', deleteModal.productId);
+
 
               // Obtener el producto primero para tener su organization_id
               const { data: productData } = await supabase
@@ -1519,7 +1516,7 @@ export default function InventoryClient({
               setDeleteNote(""); // Limpiar nota
             } else {
               // ELIMINAR PERMANENTEMENTE
-              console.log('💀 Eliminando permanentemente producto:', deleteModal.productId);
+
 
               // Verificar si tiene ventas
               const { data: sales, error: salesCheckError } = await supabase
@@ -1542,7 +1539,7 @@ export default function InventoryClient({
               }
 
               // Eliminar inventory primero
-              console.log('🗑️ Eliminando inventory...');
+
               const { error: invError } = await supabase
                 .from("inventory")
                 .delete()
@@ -1556,7 +1553,7 @@ export default function InventoryClient({
               }
 
               // Eliminar producto
-              console.log('🗑️ Eliminando producto...');
+
               const { error: deleteError } = await supabase
                 .from("products")
                 .delete()
