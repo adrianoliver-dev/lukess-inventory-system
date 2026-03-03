@@ -5,8 +5,8 @@
 ---
 
 ## CURRENT BLOCK
-- **Block Number:** 11-F
-- **Block Name:** Dynamic Attributes (Database Analysis)
+- **Block Number:** 11-G
+- **Block Name:** Dynamic Attributes (Implementation)
 - **Status:** DONE
 - **Started:** 2026-03-03
 - **Completed:** 2026-03-03
@@ -14,16 +14,16 @@
 ---
 
 ## LAST COMPLETED BLOCK
-- **Block Number:** 11-F
-- **Block Name:** Dynamic Attributes (Database Analysis)
+- **Block Number:** 11-G
+- **Block Name:** Dynamic Attributes (Implementation)
 - **Completed:** 2026-03-03
-- **Commit:** N/A (Analysis only)
+- **Commit:** pending...
 
 ---
 
 ### Files Modified
-- *No files modified in this step. Analysis and documentation only.*
-- DB Analysis stored in brain implementation plan artifact.
+- `supabase/migrations/*_get_available_filters_by_category.sql` (NEW — added RPC)
+- `types/database.types.ts` (MODIFIED — added get_available_filters_by_category signature)
 
 ---
 
@@ -43,14 +43,15 @@
 - [ ] TODO: WhatsApp `pedido_listo_recojo` template must be submitted to Meta Business for approval (pickup path currently uses this name — will be silently dropped if not approved)
 - [ ] TODO: is_featured sorting on landing page (lukess-home repo) — not implemented yet
 - [ ] TODO: User must push the `marketing_schema.sql` migration to Supabase and regenerate typescript types (From Block 12, though types were regenerated this sprint).
+- [ ] TODO: User must push the `get_available_filters_by_category` migration to Supabase manually (via CLI or Dashboard) as the MCP tool permissions were unavailable.
 
 ---
 
 ## NEXT BLOCK
-- **Block:** 11-G (or Phase 2)
-- **Name:** Dynamic Attributes (Implementation)
-- **Dependencies:** 11-F (Database Analysis) complete ✅
-- **Scope:** Awaiting user decision on implementation approach: Option 1 (Relational Tables) or Option 2 (Dynamic RPC based on Inventory).
+- **Block:** 11-H
+- **Name:** Dynamic Attributes (Frontend Integration)
+- **Dependencies:** 11-G complete ✅ (SQL must be pushed by user)
+- **Scope:** Update Category catalog views to fetch available sizes/colors using the new RPC `get_available_filters_by_category`.
 
 ---
 
