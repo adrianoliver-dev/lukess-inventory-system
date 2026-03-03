@@ -36,7 +36,7 @@ const productSchema = z.object({
   sku_group: z.string().max(50, "Máximo 50 caracteres").optional().nullable(),
   name: z.string().min(1, "Nombre es requerido").max(200, "Máximo 200 caracteres"),
   description: z.string().max(1000, "Máximo 1000 caracteres").optional(),
-  category_id: z.string().optional().nullable().transform(val => val === "" ? null : val),
+  category_input: z.string().trim().optional().nullable(),
   brand: z.string().max(50, "Máximo 50 caracteres").optional(),
   image_url: z.string().optional().or(z.literal("")),
   price: z.coerce.number().positive("El precio debe ser mayor a 0"),
@@ -141,7 +141,7 @@ export default function EditProductForm({
       sku_group: product.sku_group || "",
       name: product.name || "",
       description: product.description || "",
-      category_id: product.category_id || "",
+      category_input: product.categories?.name || "",
       brand: product.brand || "",
       image_url: product.image_url || "",
       price: product.price || 0,
@@ -227,6 +227,36 @@ export default function EditProductForm({
         is_featured: product.is_featured,
       };
 
+      // 0. Ensure Category Exists or Grab ID
+      let finalCategoryId: string | null = null;
+      if (data.category_input) {
+        // Try to find if it exactly matches an existing category
+        const existingCat = categories.find(
+          c => c.name.toLowerCase() === data.category_input!.toLowerCase()
+        );
+
+        if (existingCat) {
+          finalCategoryId = existingCat.id;
+        } else {
+          // Create new category dynamically
+          const { data: newCat, error: catError } = await supabase
+            .from("categories")
+            .insert({
+              name: data.category_input,
+              organization_id: organizationId
+            })
+            .select()
+            .single();
+
+          if (catError) {
+            toast.error("Error al crear la nueva categoría");
+            setSaving(false);
+            return;
+          }
+          finalCategoryId = newCat.id;
+        }
+      }
+
       const { error: productError } = await supabase
         .from("products")
         .update({
@@ -234,7 +264,7 @@ export default function EditProductForm({
           sku_group: data.sku_group || null,
           name: data.name,
           description: data.description || null,
-          category_id: data.category_id || null,
+          category_id: finalCategoryId,
           brand: data.brand || null,
           image_url: productImages.length > 0 ? productImages[0] : null,
           images: productImages,
@@ -300,7 +330,7 @@ export default function EditProductForm({
           sku_group: data.sku_group,
           name: data.name,
           description: data.description,
-          category_id: data.category_id,
+          category_id: finalCategoryId,
           brand: data.brand,
           image_url: productImages.length > 0 ? productImages[0] : null,
           images: productImages,
@@ -490,17 +520,17 @@ export default function EditProductForm({
               <label className="block text-sm font-medium text-zinc-700 mb-2">
                 Categoría
               </label>
-              <select
-                {...register("category_id")}
+              <input
+                {...register("category_input")}
+                list="existingCategories"
                 className="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 outline-none transition text-zinc-700"
-              >
-                <option value="">Sin categoría</option>
+                placeholder="Ej: Chamarras, Pantalones"
+              />
+              <datalist id="existingCategories">
                 {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
+                  <option key={cat.id} value={cat.name} />
                 ))}
-              </select>
+              </datalist>
             </div>
 
             <div>

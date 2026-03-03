@@ -36,7 +36,7 @@ const productSchema = z.object({
   sku_group: z.string().max(50, "Máximo 50 caracteres").optional().nullable(),
   name: z.string().min(1, "Nombre es requerido").max(200, "Máximo 200 caracteres"),
   description: z.string().max(1000, "Máximo 1000 caracteres").optional(),
-  category_id: z.string().optional().nullable().transform(val => val === "" ? null : val),
+  category_input: z.string().trim().optional().nullable(),
   brand: z.string().max(50, "Máximo 50 caracteres").optional(),
   image_url: z.string().optional().or(z.literal("")),
   price: z.coerce.number().positive("El precio debe ser mayor a 0"),
@@ -117,7 +117,7 @@ export default function NewProductForm({
       sku_group: "",
       name: "",
       description: "",
-      category_id: undefined,
+      category_input: "",
       brand: "",
       image_url: "",
       price: 0,
@@ -192,6 +192,36 @@ export default function NewProductForm({
         return;
       }
 
+      // 0. Ensure Category Exists or Grab ID
+      let finalCategoryId: string | null = null;
+      if (data.category_input) {
+        // Try to find if it exactly matches an existing category
+        const existingCat = categories.find(
+          c => c.name.toLowerCase() === data.category_input!.toLowerCase()
+        );
+
+        if (existingCat) {
+          finalCategoryId = existingCat.id;
+        } else {
+          // Create new category dynamically
+          const { data: newCat, error: catError } = await supabase
+            .from("categories")
+            .insert({
+              name: data.category_input,
+              organization_id: organizationId
+            })
+            .select()
+            .single();
+
+          if (catError) {
+            toast.error("Error al crear la nueva categoría");
+            setSaving(false);
+            return;
+          }
+          finalCategoryId = newCat.id;
+        }
+      }
+
       // 1. Create product
       const { data: product, error: productError } = await supabase
         .from("products")
@@ -201,7 +231,7 @@ export default function NewProductForm({
           sku_group: data.sku_group || null,
           name: data.name,
           description: data.description || null,
-          category_id: data.category_id || null,
+          category_id: finalCategoryId,
           brand: data.brand || null,
           image_url: productImages.length > 0 ? productImages[0] : (data.image_url || null),
           images: productImages,
@@ -272,7 +302,7 @@ export default function NewProductForm({
           sku_group: data.sku_group,
           name: data.name,
           description: data.description,
-          category_id: data.category_id,
+          category_id: finalCategoryId,
           brand: data.brand,
           price: data.price,
           cost: data.cost,
@@ -401,17 +431,17 @@ export default function NewProductForm({
               <label className="block text-sm font-medium text-zinc-700">
                 Categoría
               </label>
-              <select
-                {...register("category_id")}
+              <input
+                {...register("category_input")}
+                list="existingCategories"
+                placeholder="Ej: Chamarras, Pantalones"
                 className="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 outline-none transition text-zinc-700"
-              >
-                <option value="">Sin categoría</option>
+              />
+              <datalist id="existingCategories">
                 {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
+                  <option key={cat.id} value={cat.name} />
                 ))}
-              </select>
+              </datalist>
             </div>
 
             <div className="space-y-1.5">
@@ -579,20 +609,20 @@ export default function NewProductForm({
           {/* Margin preview */}
           {watch("price") > 0 && watch("cost") >= 0 && (
             <div className={`rounded-xl px-6 py-4 flex items-center justify-between border-2 transition-all duration-300 ${watch("price") - watch("cost") > 0
-                ? "bg-green-50 border-green-200"
-                : "bg-red-50 border-red-200"
+              ? "bg-green-50 border-green-200"
+              : "bg-red-50 border-red-200"
               }`}>
               <div className="flex items-center gap-2">
                 <TrendingUp className={`w-5 h-5 ${watch("price") - watch("cost") > 0
-                    ? "text-green-600"
-                    : "text-red-600"
+                  ? "text-green-600"
+                  : "text-red-600"
                   }`} />
                 <span className="text-sm font-semibold text-zinc-700">Margen de ganancia</span>
               </div>
               <span
                 className={`text-xl font-bold flex items-center gap-2 ${watch("price") - watch("cost") > 0
-                    ? "text-green-600"
-                    : "text-red-600"
+                  ? "text-green-600"
+                  : "text-red-600"
                   }`}
               >
                 Bs {(watch("price") - watch("cost")).toFixed(2)}
@@ -643,8 +673,8 @@ export default function NewProductForm({
                   type="button"
                   onClick={() => toggleSize(size)}
                   className={`px-4 py-3 rounded-lg text-sm font-bold border-2 transition-all ${selectedSizes.includes(size)
-                      ? "bg-zinc-600 border-zinc-600 text-white shadow-md transform scale-105"
-                      : "bg-white border-zinc-300 text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50"
+                    ? "bg-zinc-600 border-zinc-600 text-white shadow-md transform scale-105"
+                    : "bg-white border-zinc-300 text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50"
                     }`}
                 >
                   {size}
@@ -719,8 +749,8 @@ export default function NewProductForm({
                   type="button"
                   onClick={() => setSelectedColor(color)}
                   className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border-2 transition-all ${selectedColor === color
-                      ? "border-zinc-600 bg-zinc-50 shadow-md transform scale-105"
-                      : "border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50"
+                    ? "border-zinc-600 bg-zinc-50 shadow-md transform scale-105"
+                    : "border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50"
                     }`}
                 >
                   <div className="w-5 h-5 rounded-full border-2 border-zinc-300 flex-shrink-0" style={{

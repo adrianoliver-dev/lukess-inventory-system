@@ -5,8 +5,8 @@
 ---
 
 ## CURRENT BLOCK
-- **Block Number:** 11-G
-- **Block Name:** Dynamic Attributes (Implementation)
+- **Block Number:** 11-[Custom Categories Fix]
+- **Block Name:** Dynamic Categories (Frontend Integration)
 - **Status:** DONE
 - **Started:** 2026-03-03
 - **Completed:** 2026-03-03
@@ -14,16 +14,16 @@
 ---
 
 ## LAST COMPLETED BLOCK
-- **Block Number:** 11-G
-- **Block Name:** Dynamic Attributes (Implementation)
+- **Block Number:** 11-[Custom Categories Fix]
+- **Block Name:** Dynamic Categories (Frontend Integration)
 - **Completed:** 2026-03-03
 - **Commit:** pending...
 
 ---
 
 ### Files Modified
-- `supabase/migrations/*_get_available_filters_by_category.sql` (NEW — added RPC)
-- `types/database.types.ts` (MODIFIED — added get_available_filters_by_category signature)
+- `app/(dashboard)/inventario/nuevo/new-product-form.tsx` (MODIFIED — switched from category select to text datalist with dynamic insertion logc)
+- `app/(dashboard)/inventario/[id]/edit-product-form.tsx` (MODIFIED — switched from category select to text datalist)
 
 ---
 
@@ -49,7 +49,7 @@
 
 ## NEXT BLOCK
 - **Block:** 11-H
-- **Name:** Dynamic Attributes (Frontend Integration)
+- **Name:** Dynamic Attributes (Shop filters view)
 - **Dependencies:** 11-G complete ✅ (SQL must be pushed by user)
 - **Scope:** Update Category catalog views to fetch available sizes/colors using the new RPC `get_available_filters_by_category`.
 
