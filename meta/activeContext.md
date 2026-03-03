@@ -5,8 +5,8 @@
 ---
 
 ## CURRENT BLOCK
-- **Block Number:** 16-A (cleanup)
-- **Block Name:** Deep Code Cleanup
+- **Block Number:** 11-F
+- **Block Name:** Dynamic Attributes (Database Analysis)
 - **Status:** DONE
 - **Started:** 2026-03-03
 - **Completed:** 2026-03-03
@@ -14,19 +14,16 @@
 ---
 
 ## LAST COMPLETED BLOCK
-- **Block Number:** 16-A (cleanup)
-- **Block Name:** Deep Code Cleanup
+- **Block Number:** 11-F
+- **Block Name:** Dynamic Attributes (Database Analysis)
 - **Completed:** 2026-03-03
-- **Commit:** TBD
+- **Commit:** N/A (Analysis only)
 
 ---
 
 ### Files Modified
-- `lib/utils/sounds.ts` (MODIFIED — removed dev logs)
-- `lib/notifications.ts` (MODIFIED — removed dev logs)
-- `app/(dashboard)/ventas/pos-client.tsx` (MODIFIED — removed dev logs)
-- `app/(dashboard)/inventario/inventory-client.tsx` (MODIFIED — removed dev logs)
-- `app/(dashboard)/configuracion/usuarios/actions.ts` (MODIFIED — removed dev logs)
+- *No files modified in this step. Analysis and documentation only.*
+- DB Analysis stored in brain implementation plan artifact.
 
 ---
 
@@ -50,10 +47,10 @@
 ---
 
 ## NEXT BLOCK
-- **Block:** 16-B
-- **Name:** TBD
-- **Dependencies:** 16-A complete ✅
-- **Scope:** TBD
+- **Block:** 11-G (or Phase 2)
+- **Name:** Dynamic Attributes (Implementation)
+- **Dependencies:** 11-F (Database Analysis) complete ✅
+- **Scope:** Awaiting user decision on implementation approach: Option 1 (Relational Tables) or Option 2 (Dynamic RPC based on Inventory).
 
 ---
 
@@ -82,4 +79,5 @@
 | 14-B | Restore Delivery Info in Modal + Discount Idempotency | ✅ DONE | 2026-03-01 | 14f7d56 |
 | 15-B | Map WhatsApp Templates to Order Status Changes | ✅ DONE | 2026-03-01 | 2f1d723 |
 | 15-C | Pre-Production Root Cleanup | ✅ DONE | 2026-03-03 | 1ad0c99 |
-| 16-A | Deep Code Cleanup (Logs & Dead Code) | ✅ DONE | 2026-03-03 | TBD |
+| 16-A | Deep Code Cleanup (Logs & Dead Code) | ✅ DONE | 2026-03-03 | f2007b7 |
+| 11-F | Dynamic Attributes (Database Analysis) | ✅ DONE | 2026-03-03 | — |
