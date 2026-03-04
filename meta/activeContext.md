@@ -5,8 +5,8 @@
 ---
 
 ## CURRENT BLOCK
-- **Block Number:** 16-C-4-C
-- **Block Name:** Banner Edit Modal (Click-to-Edit)
+- **Block Number:** 16-C.a.B
+- **Block Name:** Admin Inventory - Thumbnail Upload Field
 - **Status:** DONE
 - **Started:** 2026-03-04
 - **Completed:** 2026-03-04
@@ -14,17 +14,17 @@
 ---
 
 ## LAST COMPLETED BLOCK
-- **Block Number:** 16-C-4-C
-- **Block Name:** Banner Edit Modal (Click-to-Edit)
+- **Block Number:** 16-C.a.B
+- **Block Name:** Admin Inventory - Thumbnail Upload Field
 - **Completed:** 2026-03-04
 - **Commits:**
-  - `feat(marketing): banner edit modal with click-to-edit on cards + pre-fill existing data` (7212c4d)
+  - `feat(admin): add thumbnail upload field to product form`
 
 ---
 
 ### Files Modified
-- `components/marketing/BannerEditModal.tsx` (NEW — edit modal with pre-filled fields, conditional image upload)
-- `components/marketing/BannersManager.tsx` (MODIFIED — click-to-edit cards, stopPropagation on buttons, hover hint overlay)
+- `app/(dashboard)/inventario/nuevo/new-product-form.tsx` (MODIFIED — added thumbnail upload UI, state, and `thumbnail_url` to insert and audit payloads)
+- `app/(dashboard)/inventario/[id]/edit-product-form.tsx` (MODIFIED — added thumbnail upload UI, state, and `thumbnail_url` to update and audit payloads)
 
 ---
 
@@ -65,6 +65,7 @@
 | 16-C-3 | Marketing + Users Module Fixes | ✅ DONE | 2026-03-04 | c6daa0c |
 | 16-C-4-A | Enhanced Banner Upload Form + DB Migration | ✅ DONE | 2026-03-04 | 3f8b046 |
 | 16-C-4-C | Banner Edit Modal (Click-to-Edit) | ✅ DONE | 2026-03-04 | 7212c4d |
+| 16-C.a.B | Admin Inventory - Thumbnail Upload Field | ✅ DONE | 2026-03-04 | TBD |
 | 9c-A | Inventario: BD + formulario descuentos/is_new | ✅ DONE | 2026-02-27 | 4001f88 |
 | 9c-B | Inventario: Upload múltiples imágenes | ✅ DONE | 2026-02-27 | 9a330bc |
 | 9c-C | Create form parity + is_featured | ✅ DONE | 2026-02-26 | 5bdab26 |

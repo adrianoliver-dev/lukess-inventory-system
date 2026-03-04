@@ -23,6 +23,9 @@ import {
   MapPin,
   TrendingUp,
   ImageIcon,
+  Upload,
+  Loader2,
+  Info,
   Globe,
 } from "lucide-react";
 import Link from "next/link";
@@ -101,6 +104,8 @@ export default function NewProductForm({
   const [customColorInput, setCustomColorInput] = useState<string>("");
   const [publishedToLanding, setPublishedToLanding] = useState(false);
   const [productImages, setProductImages] = useState<string[]>([]);
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
+  const [thumbnailUploading, setThumbnailUploading] = useState(false);
   // Stock por ubicación y talla: { locationId: { size: quantity } }
   const [stockByLocationAndSize, setStockByLocationAndSize] = useState<Record<string, Record<string, number>>>({});
 
@@ -132,6 +137,49 @@ export default function NewProductForm({
   const { register, handleSubmit, setValue, watch, formState: { errors } } = form;
 
   // Image uploading is now handled internally by ImageUploader component
+
+  const handleThumbnailUpload = async (file: File) => {
+    if (!file) return;
+
+    setThumbnailUploading(true);
+
+    try {
+      if (!file.type.startsWith("image/")) {
+        toast.error("Solo se permiten archivos de imagen");
+        return;
+      }
+
+      if (file.size > 100 * 1024) {
+        toast.error(
+          "El thumbnail debe ser ≤100KB. Usa https://squoosh.app para comprimir."
+        );
+        return;
+      }
+
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${crypto.randomUUID()}.${fileExt}`;
+      const filePath = `thumbnails/${fileName}`;
+
+      const supabase = createClient();
+      const { error } = await supabase.storage
+        .from("product-images")
+        .upload(filePath, file);
+
+      if (error) throw error;
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("product-images").getPublicUrl(filePath);
+
+      setThumbnailUrl(publicUrl);
+      toast.success("Thumbnail subido correctamente");
+    } catch (error) {
+      console.error("Error uploading thumbnail:", error);
+      toast.error("Error al subir el thumbnail");
+    } finally {
+      setThumbnailUploading(false);
+    }
+  };
 
   // ── Auto-generate SKU ──────────────────────────────────────────────────────
 
@@ -222,6 +270,7 @@ export default function NewProductForm({
           description: data.description || null,
           category_id: finalCategoryId,
           brand: data.brand || null,
+          thumbnail_url: thumbnailUrl || null,
           image_url: productImages.length > 0 ? productImages[0] : (data.image_url || null),
           images: productImages,
           price: data.price,
@@ -293,6 +342,9 @@ export default function NewProductForm({
           description: data.description,
           category_id: finalCategoryId,
           brand: data.brand,
+          thumbnail_url: thumbnailUrl || null,
+          image_url: productImages.length > 0 ? productImages[0] : (data.image_url || null),
+          images: productImages,
           price: data.price,
           cost: data.cost,
           color: selectedColor,
@@ -454,17 +506,114 @@ export default function NewProductForm({
 
         {/* ── Imágenes del producto ─────────────────────────────────────── */}
         <div className="bg-white rounded-xl border border-zinc-200 p-5 space-y-4">
-          <div className="flex items-center gap-2 text-sm font-semibold text-zinc-900">
+          <div className="flex items-center gap-2 text-sm font-semibold text-zinc-900 mb-2">
             <ImageIcon className="w-4 h-4 text-zinc-600" />
-            Imágenes del producto (opcional)
+            Imágenes del producto
           </div>
-          <ImageUploader
-            existingImages={productImages}
-            onImagesChange={setProductImages}
-            maxImages={5}
-            bucketName="product-images"
-            organizationId={organizationId}
-          />
+
+          {/* ────── Thumbnail (Catálogo) ────── */}
+          <div className="space-y-3 pb-6 border-b border-zinc-200">
+            <div className="flex flex-col gap-1">
+              <label className="block text-sm font-semibold text-zinc-700">
+                Thumbnail para Catálogo
+                <span className="ml-1 text-xs font-normal text-zinc-500">(Opcional)</span>
+              </label>
+              <p className="text-xs text-zinc-500">
+                Imagen optimizada que se muestra en las cards del catálogo.
+                <br />
+                <span className="font-medium text-zinc-700">Specs:</span> 480×600px - WebP - ≤80KB
+              </p>
+            </div>
+
+            {thumbnailUrl && (
+              <div className="relative w-32 h-40 border-2 border-zinc-200 rounded-lg overflow-hidden bg-zinc-50">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={thumbnailUrl}
+                  alt="Thumbnail preview"
+                  className="w-full h-full object-contain"
+                />
+                <button
+                  type="button"
+                  onClick={() => setThumbnailUrl(null)}
+                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                  aria-label="Eliminar thumbnail"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+
+            <div className="flex items-center gap-3">
+              <label className={`cursor-pointer inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${thumbnailUploading ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed' : 'bg-zinc-600 text-white hover:bg-zinc-700'}`}>
+                <input
+                  type="file"
+                  accept="image/webp,image/jpeg,image/png"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleThumbnailUpload(file);
+                  }}
+                  className="hidden"
+                  disabled={thumbnailUploading}
+                />
+                {thumbnailUploading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Subiendo...
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4" />
+                    {thumbnailUrl ? 'Cambiar thumbnail' : 'Subir thumbnail'}
+                  </>
+                )}
+              </label>
+
+              {!thumbnailUrl && (
+                <a
+                  href="https://squoosh.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-blue-600 hover:text-blue-700 underline"
+                >
+                  Comprimir con Squoosh ↗
+                </a>
+              )}
+            </div>
+
+            {/* Helper explicando el sistema dual */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <div className="flex gap-2">
+                <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                <div className="text-xs text-blue-900">
+                  <p className="font-semibold mb-1">¿Por qué usar thumbnail?</p>
+                  <p>
+                    El thumbnail se carga rápido en el catálogo (80KB vs 250KB de la imagen principal).
+                    Si no subes thumbnail, se usará automáticamente la imagen principal.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ────── Imágenes Generales ────── */}
+          <div className="space-y-3 pt-2">
+            <div className="flex flex-col gap-1">
+              <label className="block text-sm font-semibold text-zinc-700">
+                Imágenes de Detalle
+              </label>
+              <p className="text-xs text-zinc-500 mb-2">
+                <span className="font-medium text-zinc-700">Specs:</span> 800×1000px - WebP - ≤250KB cada una
+              </p>
+            </div>
+            <ImageUploader
+              existingImages={productImages}
+              onImagesChange={setProductImages}
+              maxImages={5}
+              bucketName="product-images"
+              organizationId={organizationId}
+            />
+          </div>
         </div>
 
         {/* ── Promociones y Visibilidad ─────────────────────────────────── */}
