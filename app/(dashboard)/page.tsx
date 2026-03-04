@@ -141,8 +141,7 @@ export default async function DashboardPage() {
         orders!inner(organization_id, status)
       `)
       .eq("orders.organization_id", orgId)
-      // Filter out completed, cancelled, and delivered to catch ALL active reservations
-      .not("orders.status", "in", '("completed","cancelled","entregado","COMPLETED","CANCELLED","ENTREGADO")'),
+      .eq("orders.status", "pending"),
 
     // Last 5 sales
     supabase
