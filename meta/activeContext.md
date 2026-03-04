@@ -5,8 +5,8 @@
 ---
 
 ## CURRENT BLOCK
-- **Block Number:** 16-C-4-A
-- **Block Name:** Enhanced Banner Upload Form + Supabase Migration
+- **Block Number:** 16-C-4-C
+- **Block Name:** Banner Edit Modal (Click-to-Edit)
 - **Status:** DONE
 - **Started:** 2026-03-04
 - **Completed:** 2026-03-04
@@ -14,19 +14,17 @@
 ---
 
 ## LAST COMPLETED BLOCK
-- **Block Number:** 16-C-4-A
-- **Block Name:** Enhanced Banner Upload Form + Supabase Migration
+- **Block Number:** 16-C-4-C
+- **Block Name:** Banner Edit Modal (Click-to-Edit)
 - **Completed:** 2026-03-04
-- **Commits:** 
-  - `feat(marketing): enhanced banner form with desktop/mobile images + date range + migration` (3f8b046)
+- **Commits:**
+  - `feat(marketing): banner edit modal with click-to-edit on cards + pre-fill existing data` (7212c4d)
 
 ---
 
 ### Files Modified
-- `supabase/migrations/20260304173354_enhance_banners_table.sql` (NEW — adds desktop_image_url, mobile_image_url, start_date, end_date to banners)
-- `types/database.types.ts` (MODIFIED — banners table type updated with 4 new columns)
-- `components/marketing/BannerUploadModal.tsx` (NEW — full modal form with dual image upload, validation, previews)
-- `components/marketing/BannersManager.tsx` (MODIFIED — Banner interface updated, modal integration, date badges, dual-file delete)
+- `components/marketing/BannerEditModal.tsx` (NEW — edit modal with pre-filled fields, conditional image upload)
+- `components/marketing/BannersManager.tsx` (MODIFIED — click-to-edit cards, stopPropagation on buttons, hover hint overlay)
 
 ---
 
@@ -66,6 +64,7 @@
 | 16-C-2 | Inventory UX Improvements | ✅ DONE | 2026-03-04 | 01d905d |
 | 16-C-3 | Marketing + Users Module Fixes | ✅ DONE | 2026-03-04 | c6daa0c |
 | 16-C-4-A | Enhanced Banner Upload Form + DB Migration | ✅ DONE | 2026-03-04 | 3f8b046 |
+| 16-C-4-C | Banner Edit Modal (Click-to-Edit) | ✅ DONE | 2026-03-04 | 7212c4d |
 | 9c-A | Inventario: BD + formulario descuentos/is_new | ✅ DONE | 2026-02-27 | 4001f88 |
 | 9c-B | Inventario: Upload múltiples imágenes | ✅ DONE | 2026-02-27 | 9a330bc |
 | 9c-C | Create form parity + is_featured | ✅ DONE | 2026-02-26 | 5bdab26 |
