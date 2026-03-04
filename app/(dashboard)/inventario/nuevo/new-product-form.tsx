@@ -605,11 +605,7 @@ export default function NewProductForm({
                   <span className="ml-1 text-red-500">*</span>
                 </label>
                 <p className="text-xs text-zinc-500 mt-1">
-                  Foto grande que se muestra al abrir el producto. (Asegúrate de que sea la PRIMERA foto en el cuadro de abajo).
-                  <br />
-                  <span className="font-medium text-zinc-700">Specs:</span>{' '}
-                  800×1000px - WebP - ≤250KB - Fondo{' '}
-                  <code className="bg-zinc-100 px-1 rounded text-zinc-700">#F9FAFB</code>
+                  800×1000px • WebP • ≤250KB • Fondo #F9FAFB
                 </p>
               </div>
             </div>
@@ -617,17 +613,10 @@ export default function NewProductForm({
             <div className="space-y-2">
               <div>
                 <label className="block text-sm font-semibold text-zinc-700">
-                  Galería Adicional
-                  <span className="ml-1 text-xs font-normal text-zinc-500">
-                    (Opcional — hasta 4 fotos extra)
-                  </span>
+                  Galería Adicional (Opcional — hasta 5 fotos)
                 </label>
                 <p className="text-xs text-zinc-500 mt-1">
-                  Fotos de detalles, ángulos, texturas. Se muestran al navegar el producto. (Añádelas después de la foto principal).
-                  <br />
-                  <span className="font-medium text-zinc-700">Specs:</span>{' '}
-                  800×1000px - WebP - ≤200KB c/u - Mismo fondo{' '}
-                  <code className="bg-zinc-100 px-1 rounded text-zinc-700">#F9FAFB</code>
+                  800×1000px • WebP • ≤200KB c/u • Mismo fondo #F9FAFB
                 </p>
               </div>
               <ImageUploader

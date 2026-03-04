@@ -19,6 +19,7 @@
 - **Completed:** 2026-03-04
 - **Commits:**
   - `feat(admin): add thumbnail upload field to product form`
+  - `fix(admin): clarify image field labels with specs`
 
 ---
 
