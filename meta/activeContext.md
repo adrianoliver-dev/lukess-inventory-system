@@ -5,8 +5,8 @@
 ---
 
 ## CURRENT BLOCK
-- **Block Number:** 11-[Custom Categories Fix]
-- **Block Name:** Dynamic Categories (Frontend Integration)
+- **Block Number:** 11-[RPC Color Fix]
+- **Block Name:** Fix: RPC `get_available_filters_by_category` color column bug
 - **Status:** DONE
 - **Started:** 2026-03-03
 - **Completed:** 2026-03-03
@@ -14,16 +14,16 @@
 ---
 
 ## LAST COMPLETED BLOCK
-- **Block Number:** 11-[Custom Categories Fix]
-- **Block Name:** Dynamic Categories (Frontend Integration)
+- **Block Number:** 11-[RPC Color Fix]
+- **Block Name:** Fix: RPC color column bug (inventory.color → products.color)
 - **Completed:** 2026-03-03
-- **Commit:** pending...
+- **Commits:** `fix(rpc): correct color column name from 'colors' to 'color'` + `fix(types): update get_available_filters_by_category return type`
 
 ---
 
 ### Files Modified
-- `app/(dashboard)/inventario/nuevo/new-product-form.tsx` (MODIFIED — switched from category select to text datalist with dynamic insertion logc)
-- `app/(dashboard)/inventario/[id]/edit-product-form.tsx` (MODIFIED — switched from category select to text datalist)
+- `supabase/migrations/20260303220045_get_available_filters_by_category.sql` (REWRITTEN — correct column ref + RETURNS TABLE signature)
+- `types/database.types.ts` (MODIFIED — precise return type instead of Json)
 
 ---
 
