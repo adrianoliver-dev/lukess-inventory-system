@@ -4,19 +4,27 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Trash2, Plus, Image as ImageIcon, Loader2, Pencil, ChevronUp, ChevronDown } from "lucide-react";
 import toast from "react-hot-toast";
+import { BannerUploadModal } from "@/components/marketing/BannerUploadModal";
+import { format, parseISO } from "date-fns";
+import { es } from "date-fns/locale";
 
 interface Banner {
     id: string;
-    image_url: string;
+    image_url?: string; // deprecated, kept for backward compat
+    desktop_image_url: string;
+    mobile_image_url: string | null;
     title: string | null;
     link: string | null;
     is_active: boolean;
     display_order: number;
+    start_date: string;
+    end_date: string | null;
 }
 
 export function BannersManager(): React.JSX.Element {
     const [banners, setBanners] = useState<Banner[]>([]);
     const [loading, setLoading] = useState(true);
+    const [showUploadModal, setShowUploadModal] = useState(false);
     const supabase = createClient();
 
     useEffect(() => {
@@ -33,62 +41,9 @@ export function BannersManager(): React.JSX.Element {
         if (error) {
             toast.error("Error al cargar banners");
         } else {
-            setBanners(data || []);
+            setBanners((data || []) as Banner[]);
         }
         setLoading(false);
-    };
-
-    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
-        if (!e.target.files || e.target.files.length === 0) return;
-        const file = e.target.files[0];
-
-        // 2B: Validation
-        const MAX_SIZE = 2 * 1024 * 1024; // 2MB
-        if (file.size > MAX_SIZE) {
-            toast.error("Imagen máx 2MB");
-            return;
-        }
-
-        const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-        if (!allowedTypes.includes(file.type)) {
-            toast.error("Formato no permitido. Usa JPG, PNG, WebP o GIF");
-            return;
-        }
-
-        const fileExt = file.name.split(".").pop();
-        const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-        const filePath = `${fileName}`;
-
-        toast.loading("Subiendo imagen...", { id: "upload" });
-
-        const { error: uploadError } = await supabase.storage
-            .from("banners")
-            .upload(filePath, file);
-
-        if (uploadError) {
-            toast.error("Error al subir imagen", { id: "upload" });
-            return;
-        }
-
-        const { data: urlData } = supabase.storage
-            .from("banners")
-            .getPublicUrl(filePath);
-
-        const { error: dbError } = await supabase.from("banners").insert({
-            image_url: urlData.publicUrl,
-            title: "Nuevo Banner",
-            link: "/",
-            is_active: true,
-            display_order: banners.length,
-        });
-
-        if (dbError) {
-            console.error("Supabase Insert Error (Banners):", dbError);
-            toast.error(`Error DB: ${dbError.message}`, { id: "upload" });
-        } else {
-            toast.success("Banner subido", { id: "upload" });
-            fetchBanners();
-        }
     };
 
     const toggleActive = async (id: string, current: boolean): Promise<void> => {
@@ -102,14 +57,19 @@ export function BannersManager(): React.JSX.Element {
         }
     };
 
-    const handleDelete = async (id: string, url: string): Promise<void> => {
+    const handleDelete = async (id: string, desktopUrl: string, mobileUrl: string | null): Promise<void> => {
         if (!confirm("¿Eliminar este banner?")) return;
 
-        // Extraer path
-        const urlParts = url.split("/");
-        const filename = urlParts[urlParts.length - 1];
+        // Extract storage paths from URLs
+        const extractPath = (url: string): string => {
+            const parts = url.split("/banners/");
+            return parts.length > 1 ? parts[1] : url.split("/").slice(-1)[0];
+        };
 
-        await supabase.storage.from("banners").remove([filename]);
+        const filesToRemove: string[] = [extractPath(desktopUrl)];
+        if (mobileUrl) filesToRemove.push(extractPath(mobileUrl));
+
+        await supabase.storage.from("banners").remove(filesToRemove);
         const { error } = await supabase.from("banners").delete().eq("id", id);
 
         if (!error) {
@@ -149,6 +109,15 @@ export function BannersManager(): React.JSX.Element {
         }
     };
 
+    const formatDate = (dateStr: string | null): string => {
+        if (!dateStr) return "Sin expiración";
+        try {
+            return format(parseISO(dateStr), "dd MMM yyyy", { locale: es });
+        } catch {
+            return "—";
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex justify-center p-12">
@@ -162,19 +131,27 @@ export function BannersManager(): React.JSX.Element {
             <div className="flex justify-between items-start mb-6">
                 <div>
                     <h2 className="text-xl font-bold text-zinc-900 mb-1">Banners Activos</h2>
-                    <p className="text-xs text-zinc-500">Dimensiones recomendadas: Desktop (1920x800px, 21:9) | Mobile (800x1000px, 4:5). Máximo 2MB.</p>
+                    <p className="text-xs text-zinc-500">Dimensiones recomendadas: Desktop (1920x800px, 21:9) | Mobile (800x1200px, 2:3). Máximo 2MB.</p>
                 </div>
-                <label className="cursor-pointer bg-zinc-900 hover:bg-zinc-800 text-white font-medium py-2 px-4 rounded-xl flex items-center gap-2 transition-colors">
+                <button
+                    onClick={() => setShowUploadModal(true)}
+                    className="cursor-pointer bg-zinc-900 hover:bg-zinc-800 text-white font-medium py-2 px-4 rounded-xl flex items-center gap-2 transition-colors"
+                >
                     <Plus className="w-4 h-4" />
                     Subir Banner
-                    <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleUpload}
-                    />
-                </label>
+                </button>
             </div>
+
+            {showUploadModal && (
+                <BannerUploadModal
+                    onClose={() => setShowUploadModal(false)}
+                    onSuccess={() => {
+                        setShowUploadModal(false);
+                        fetchBanners();
+                    }}
+                    bannersCount={banners.length}
+                />
+            )}
 
             {banners.length === 0 ? (
                 <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-12 text-center">
@@ -192,7 +169,7 @@ export function BannersManager(): React.JSX.Element {
                         <div key={banner.id} className="group relative bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">
                             <div className="aspect-[21/9] bg-zinc-100 relative">
                                 <img
-                                    src={banner.image_url}
+                                    src={banner.desktop_image_url}
                                     alt={banner.title || "Banner"}
                                     className="w-full h-full object-cover"
                                 />
@@ -225,7 +202,7 @@ export function BannersManager(): React.JSX.Element {
                                         {banner.is_active ? "Activo" : "Inactivo"}
                                     </button>
                                     <button
-                                        onClick={() => handleDelete(banner.id, banner.image_url)}
+                                        onClick={() => handleDelete(banner.id, banner.desktop_image_url, banner.mobile_image_url)}
                                         className="p-1.5 bg-white text-red-600 rounded-full shadow-sm hover:bg-red-50"
                                     >
                                         <Trash2 className="w-4 h-4" />
@@ -254,6 +231,18 @@ export function BannersManager(): React.JSX.Element {
                                             className="w-full border-0 border-b border-zinc-100 focus:border-gold-500 bg-transparent outline-none text-xs text-zinc-500 font-medium py-0.5 transition-colors"
                                         />
                                     </div>
+                                </div>
+                                {/* Date badges */}
+                                <div className="flex flex-wrap gap-1.5 pt-1 border-t border-zinc-100">
+                                    <span className="text-xs text-zinc-500 bg-zinc-50 px-2 py-0.5 rounded-md border border-zinc-100">
+                                        Desde {formatDate(banner.start_date)}
+                                    </span>
+                                    <span className={`text-xs px-2 py-0.5 rounded-md border ${banner.end_date
+                                        ? "text-amber-700 bg-amber-50 border-amber-100"
+                                        : "text-zinc-400 bg-zinc-50 border-zinc-100"
+                                        }`}>
+                                        {banner.end_date ? `Expira ${formatDate(banner.end_date)}` : "Sin expiración"}
+                                    </span>
                                 </div>
                             </div>
                         </div>

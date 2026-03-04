@@ -62,7 +62,7 @@
 | 1to8 | Fundamentals (Roles to Reports) | ✅ DONE | Feb 2026 | — |
 | 16-C-1 | Dashboard + Reportes Critical Fixes | ✅ DONE | 2026-03-04 | TBD |
 | 16-C-2 | Inventory UX Improvements | ✅ DONE | 2026-03-04 | 01d905d |
-| 16-C-3 | Marketing + Users Module Fixes | ✅ DONE | 2026-03-04 | TBD |
+| 16-C-3 | Marketing + Users Module Fixes | ✅ DONE | 2026-03-04 | c6daa0c |
 | 9c-A | Inventario: BD + formulario descuentos/is_new | ✅ DONE | 2026-02-27 | 4001f88 |
 | 9c-B | Inventario: Upload múltiples imágenes | ✅ DONE | 2026-02-27 | 9a330bc |
 | 9c-C | Create form parity + is_featured | ✅ DONE | 2026-02-26 | 5bdab26 |
