@@ -36,6 +36,14 @@ import { format, eachDayOfInterval, parseISO, differenceInDays, formatDistanceTo
 import { es } from "date-fns/locale";
 import { Button } from "@/components/ui/Button";
 
+const CHART_COLORS = {
+  online: '#374151',    // dark gray — all Online channel elements
+  fisico: '#D4AF37',    // gold — all Físico channel elements  
+  inactive: '#D4D4D8',  // zinc-300 — inactive/background bars
+  danger: '#EF4444',    // red — discount/negative values
+  accent: '#3B82F6',    // blue — neutral accent (discount chart "Neto")
+} as const;
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 interface OrderRow {
@@ -297,8 +305,8 @@ export default function ReportesVentasClient({
   }, [onlineRevenue, fisicoRevenue]);
 
   const DONUT_COLORS = [
-    '#6B7280', // Online
-    '#D4AF37', // Físico
+    CHART_COLORS.online, // Online
+    CHART_COLORS.fisico, // Físico
   ];
 
   // ── Daily table ────────────────────────────────────────────────────────────
@@ -398,8 +406,8 @@ export default function ReportesVentasClient({
   const descuentoPct = ingresosBrutos > 0 ? (totalDescuentos / ingresosBrutos) * 100 : 0;
 
   const discountChartData = [
-    { name: "Neto", value: ingresosNetos, fill: "#3B82F6" },
-    { name: "Descuento", value: totalDescuentos, fill: "#EF4444" },
+    { name: "Neto", value: ingresosNetos, fill: CHART_COLORS.accent },
+    { name: "Descuento", value: totalDescuentos, fill: CHART_COLORS.danger },
   ];
 
   // ── Inventory alerts ───────────────────────────────────────────────────────
@@ -644,8 +652,8 @@ export default function ReportesVentasClient({
                 content={<BarTooltip />}
               />
               <Legend iconType="circle" iconSize={10} wrapperStyle={{ fontSize: 12, paddingTop: 12 }} />
-              <Bar dataKey="Online" stackId="a" fill="#374151" radius={[0, 0, 0, 0]} />
-              <Bar dataKey="Físico" stackId="a" fill="var(--color-gold-500)" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Online" stackId="a" fill={CHART_COLORS.online} radius={[0, 0, 0, 0]} />
+              <Bar dataKey="Físico" stackId="a" fill={CHART_COLORS.fisico} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -844,7 +852,7 @@ export default function ReportesVentasClient({
                   cursor={{ fill: 'var(--color-zinc-50)' }}
                   content={<SimpleTooltip />}
                 />
-                <Bar dataKey="ingresos" name="Ingresos" fill="var(--color-gold-500)" radius={[0, 6, 6, 0]} />
+                <Bar dataKey="ingresos" name="Ingresos" fill={CHART_COLORS.fisico} radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -887,7 +895,7 @@ export default function ReportesVentasClient({
                 {dowData.map((entry, index) => (
                   <Cell
                     key={index}
-                    fill={entry.total === dowMax && dowMax > 0 ? "var(--color-gold-500)" : "var(--color-zinc-300)"}
+                    fill={entry.total === dowMax && dowMax > 0 ? CHART_COLORS.fisico : CHART_COLORS.inactive}
                   />
                 ))}
               </Bar>
@@ -1131,10 +1139,10 @@ export default function ReportesVentasClient({
                 <td className="px-6 py-3.5 text-xs font-bold text-gray-600 uppercase">
                   Total período
                 </td>
-                <td className="px-4 py-3.5 text-right text-sm font-bold text-blue-700">
+                <td className="px-4 py-3.5 text-right text-sm font-bold text-zinc-700">
                   {formatBs(onlineRevenue)}
                 </td>
-                <td className="px-4 py-3.5 text-right text-sm font-bold text-orange-600">
+                <td className="px-4 py-3.5 text-right text-sm font-bold" style={{ color: CHART_COLORS.fisico }}>
                   {formatBs(fisicoRevenue)}
                 </td>
                 <td className="px-4 py-3.5 text-right text-sm font-bold text-gray-900">

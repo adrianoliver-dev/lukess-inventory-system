@@ -15,16 +15,18 @@
 
 ## LAST COMPLETED BLOCK
 - **Block Number:** 16-C-1
-- **Block Name:** Dashboard + Reportes Critical Fixes
+- **Block Name:** Dashboard + Reportes Critical Fixes (includes Sub-Block 16-C-1-FIX)
 - **Completed:** 2026-03-04
-- **Commits:** `fix(dashboard): stock reservado KPI, split ventas online/físico, global low stock logic, chart colors zinc/gold`
+- **Commits:** 
+  - `fix(dashboard): stock reservado KPI, split ventas online/físico, global low stock logic, chart colors zinc/gold`
+  - `fix(dashboard): reserved stock query + normalize chart colors to CHART_COLORS`
 
 ---
 
 ### Files Modified
-- `app/(dashboard)/page.tsx` (MODIFIED — added Stock Reservado KPI, split Ventas Hoy into Online/Físico, refactored Bajo Stock to use global product stock with size critical badges)
+- `app/(dashboard)/page.tsx` (MODIFIED — fixed reserved stock query to join from orders to order_items)
 - `app/(dashboard)/pedidos/pedidos-client.tsx` (MODIFIED — fixed "Ventas del Mes" logic to check for "entregado" as well as "completed")
-- `app/(dashboard)/reportes/reports-client.tsx` (MODIFIED — updated chart colors to use slate/gold for Físico and Online proportions, removed black bars)
+- `app/(dashboard)/reportes/reports-client.tsx` (MODIFIED — added unified CHART_COLORS and normalized all Online elements to dark gray and Físico to gold)
 
 ---
 
