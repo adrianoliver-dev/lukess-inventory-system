@@ -13,7 +13,7 @@ export default function TopBar({ profile }: TopBarProps): React.JSX.Element {
     .slice(0, 2);
 
   return (
-    <header className="sticky top-0 z-30 h-14 bg-zinc-950 text-zinc-50 border-b border-zinc-900 flex items-center justify-between px-4 lg:px-6">
+    <header className="sticky top-0 z-30 h-14 bg-zinc-950 text-zinc-50 border-b border-zinc-900 flex items-center justify-between pl-16 pr-4 lg:px-6">
       {/* Left: System title */}
       <div className="flex items-center gap-4">
         <h2 className="text-sm font-medium text-zinc-50">Sistema de Inventario</h2>

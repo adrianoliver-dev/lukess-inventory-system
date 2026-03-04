@@ -760,7 +760,7 @@ export default function InventoryClient({
                       )}
                     </button>
                   </th>
-                  <th className="text-left text-xs font-semibold text-zinc-500 uppercase tracking-wider px-6 py-4">
+                  <th className="hidden lg:table-cell text-left text-xs font-semibold text-zinc-500 uppercase tracking-wider px-6 py-4">
                     <button
                       onClick={() => handleSort("sku")}
                       className="flex items-center gap-1 hover:text-zinc-900 transition"
@@ -773,10 +773,10 @@ export default function InventoryClient({
                       )}
                     </button>
                   </th>
-                  <th className="text-left text-xs font-semibold text-zinc-500 uppercase tracking-wider px-6 py-4">
+                  <th className="hidden lg:table-cell text-left text-xs font-semibold text-zinc-500 uppercase tracking-wider px-6 py-4">
                     Categoría
                   </th>
-                  <th className="text-right text-xs font-semibold text-zinc-500 uppercase tracking-wider px-6 py-4">
+                  <th className="hidden lg:table-cell text-right text-xs font-semibold text-zinc-500 uppercase tracking-wider px-6 py-4">
                     <button
                       onClick={() => handleSort("price")}
                       className="flex items-center gap-1 ml-auto hover:text-zinc-900 transition"
@@ -803,7 +803,7 @@ export default function InventoryClient({
                     </button>
                   </th>
                   {(userRole === "admin" || userRole === "manager") && (
-                    <th className="text-center text-xs font-semibold text-zinc-500 uppercase tracking-wider px-4 py-4">
+                    <th className="hidden lg:table-cell text-center text-xs font-semibold text-zinc-500 uppercase tracking-wider px-4 py-4">
                       Landing
                     </th>
                   )}
@@ -902,12 +902,12 @@ export default function InventoryClient({
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="hidden lg:table-cell px-6 py-4">
                           <span className="text-sm text-zinc-600 font-mono font-medium">
                             {product.sku}
                           </span>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="hidden lg:table-cell px-6 py-4">
                           {product.categories ? (
                             <span className="inline-flex px-2.5 py-1 rounded-lg text-xs font-semibold bg-zinc-100 text-zinc-700">
                               {product.categories.name}
@@ -916,7 +916,7 @@ export default function InventoryClient({
                             <span className="text-xs text-zinc-400">—</span>
                           )}
                         </td>
-                        <td className="px-6 py-4 text-right">
+                        <td className="hidden lg:table-cell px-6 py-4 text-right">
                           <span className="text-sm font-bold text-zinc-900">
                             Bs {product.price.toFixed(2)}
                           </span>
@@ -941,7 +941,7 @@ export default function InventoryClient({
                           </div>
                         </td>
                         {(userRole === "admin" || userRole === "manager") && (
-                          <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
+                          <td className="hidden lg:table-cell px-4 py-4" onClick={(e) => e.stopPropagation()}>
                             <div className="flex flex-col items-center gap-1">
                               <button
                                 onClick={(e) => {

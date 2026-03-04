@@ -90,7 +90,7 @@ export function ProductQuickView({
           </div>
 
           {/* Body */}
-          <div className="p-6 space-y-6">
+          <div className="p-6 space-y-4">
             {/* Imagen o placeholder */}
             <div className="bg-blue-50 rounded-xl p-8 border-2 border-blue-200 flex items-center justify-center">
               <Package className="w-24 h-24 text-blue-600" />
@@ -171,11 +171,6 @@ export function ProductQuickView({
                   >
                     {totalStock} unidades
                   </p>
-                  {isLowStock && (
-                    <p className="text-sm text-red-600 mt-1 font-medium">
-                      ⚠️ Stock bajo - Reabastecer pronto
-                    </p>
-                  )}
                 </div>
                 <MapPin
                   className={`w-8 h-8 ${isLowStock
@@ -191,29 +186,29 @@ export function ProductQuickView({
             {/* Stock por ubicación */}
             {product.inventory && product.inventory.length > 0 && (
               <div>
-                <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                   <MapPin className="w-4 h-4" />
                   Stock por Ubicación
                 </h3>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {product.inventory.map((inv) => (
                     <div
                       key={inv.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
+                      className="flex items-center justify-between py-1.5 px-3 bg-gray-50 rounded-lg border border-gray-200"
                     >
                       <span className="text-sm text-gray-700">
                         {(inv as any).locations?.name || `Ubicación ${inv.location_id.slice(0, 8)}...`}
                       </span>
                       <div className="text-right">
                         <span
-                          className={`text-lg font-bold ${inv.quantity <= inv.min_stock
+                          className={`text-base font-bold ${inv.quantity <= inv.min_stock
                             ? "text-red-600"
                             : "text-green-600"
                             }`}
                         >
                           {inv.quantity}
                         </span>
-                        <span className="text-sm text-gray-500 ml-1">
+                        <span className="text-xs text-gray-500 ml-1">
                           unidades
                         </span>
                       </div>

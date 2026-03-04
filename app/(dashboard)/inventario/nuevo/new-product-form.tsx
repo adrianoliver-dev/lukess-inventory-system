@@ -61,6 +61,7 @@ interface NewProductFormProps {
   locations: Location[];
   organizationId: string;
   nextProductNumber: number;
+  brands: string[];
 }
 
 // ── Predefined options ───────────────────────────────────────────────────────
@@ -89,12 +90,12 @@ export default function NewProductForm({
   locations,
   organizationId,
   nextProductNumber,
+  brands,
 }: NewProductFormProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [customSize, setCustomSize] = useState("");
-  const [recentBrands, setRecentBrands] = useState<string[]>([]);
   const [auditNote, setAuditNote] = useState("");
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [customColorInput, setCustomColorInput] = useState<string>("");
@@ -102,12 +103,6 @@ export default function NewProductForm({
   const [productImages, setProductImages] = useState<string[]>([]);
   // Stock por ubicación y talla: { locationId: { size: quantity } }
   const [stockByLocationAndSize, setStockByLocationAndSize] = useState<Record<string, Record<string, number>>>({});
-
-  // Load saved data from localStorage
-  useEffect(() => {
-    const savedBrands = localStorage.getItem("recentBrands");
-    if (savedBrands) setRecentBrands(JSON.parse(savedBrands));
-  }, []);
 
   const form = useForm({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -173,12 +168,6 @@ export default function NewProductForm({
   // ── Submit ─────────────────────────────────────────────────────────────────
 
   const onSubmit = async (data: ProductFormData) => {
-    // Save brand to localStorage
-    if (data.brand && data.brand.trim()) {
-      const updated = [data.brand, ...recentBrands.filter(b => b !== data.brand)].slice(0, 10);
-      setRecentBrands(updated);
-      localStorage.setItem("recentBrands", JSON.stringify(updated));
-    }
     setSaving(true);
 
     try {
@@ -450,20 +439,15 @@ export default function NewProductForm({
               </label>
               <input
                 {...register("brand")}
-                list="recentBrandsList"
+                list="brandsList"
                 placeholder="Ej: Levi's"
                 className="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 outline-none transition text-zinc-900 placeholder:text-zinc-400"
               />
-              <datalist id="recentBrandsList">
-                {recentBrands.map((brand) => (
+              <datalist id="brandsList">
+                {brands.map((brand) => (
                   <option key={brand} value={brand} />
                 ))}
               </datalist>
-              {recentBrands.length > 0 && (
-                <p className="text-xs text-zinc-500">
-                  Sugerencias: {recentBrands.slice(0, 3).join(", ")}
-                </p>
-              )}
             </div>
           </div>
         </div>
@@ -905,9 +889,10 @@ export default function NewProductForm({
                       <input
                         type="number"
                         min="0"
-                        value={stockByLocationAndSize[loc.id]?.['Unitalla'] ?? 0}
+                        placeholder="0"
+                        value={stockByLocationAndSize[loc.id]?.['Unitalla'] || ""}
                         onChange={(e) => {
-                          const value = parseInt(e.target.value) || 0;
+                          const value = e.target.value === "" ? 0 : parseInt(e.target.value) || 0;
                           setStockByLocationAndSize(prev => ({
                             ...prev,
                             [loc.id]: {
@@ -943,9 +928,10 @@ export default function NewProductForm({
                           <input
                             type="number"
                             min="0"
-                            value={stockByLocationAndSize[loc.id]?.[size] || 0}
+                            placeholder="0"
+                            value={stockByLocationAndSize[loc.id]?.[size] || ""}
                             onChange={(e) => {
-                              const value = parseInt(e.target.value) || 0;
+                              const value = e.target.value === "" ? 0 : parseInt(e.target.value) || 0;
                               setStockByLocationAndSize(prev => ({
                                 ...prev,
                                 [loc.id]: {

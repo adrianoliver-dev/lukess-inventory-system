@@ -66,6 +66,7 @@ interface EditProductFormProps {
   categories: Category[];
   locations: Location[];
   organizationId: string;
+  brands: string[];
 }
 
 // ── Predefined options ───────────────────────────────────────────────────────
@@ -92,6 +93,7 @@ export default function EditProductForm({
   categories,
   locations,
   organizationId,
+  brands,
 }: EditProductFormProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
@@ -539,9 +541,15 @@ export default function EditProductForm({
               </label>
               <input
                 {...register("brand")}
+                list="brandsList"
                 className="w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 outline-none transition text-zinc-900 placeholder:text-zinc-400"
                 placeholder="Ej: Columbia, Nike, Adidas"
               />
+              <datalist id="brandsList">
+                {brands.map((brand) => (
+                  <option key={brand} value={brand} />
+                ))}
+              </datalist>
             </div>
           </div>
 
@@ -913,9 +921,10 @@ export default function EditProductForm({
                             <input
                               type="number"
                               min="0"
-                              value={stockByLocationAndSize[loc.id]?.['Unitalla'] ?? 0}
+                              placeholder="0"
+                              value={stockByLocationAndSize[loc.id]?.['Unitalla'] || ""}
                               onChange={(e) => {
-                                const value = parseInt(e.target.value) || 0;
+                                const value = e.target.value === "" ? 0 : parseInt(e.target.value) || 0;
                                 setStockByLocationAndSize(prev => ({
                                   ...prev,
                                   [loc.id]: {
@@ -951,9 +960,10 @@ export default function EditProductForm({
                                 <input
                                   type="number"
                                   min="0"
-                                  value={stockByLocationAndSize[loc.id]?.[size] || 0}
+                                  placeholder="0"
+                                  value={stockByLocationAndSize[loc.id]?.[size] || ""}
                                   onChange={(e) => {
-                                    const value = parseInt(e.target.value) || 0;
+                                    const value = e.target.value === "" ? 0 : parseInt(e.target.value) || 0;
                                     setStockByLocationAndSize(prev => ({
                                       ...prev,
                                       [loc.id]: {

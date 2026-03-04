@@ -58,12 +58,22 @@ export default async function EditProductPage({ params }: PageProps) {
     .eq("organization_id", orgId)
     .order("name");
 
+  // Get brands
+  const { data: brandsData } = await supabase
+    .from("products")
+    .select("brand")
+    .eq("organization_id", orgId)
+    .not("brand", "is", null);
+
+  const uniqueBrands = Array.from(new Set(brandsData?.map(p => p.brand).filter(Boolean) as string[])).sort();
+
   return (
     <EditProductForm
       product={product}
       categories={(categories as Category[]) || []}
       locations={(locations as Location[]) || []}
       organizationId={orgId}
+      brands={uniqueBrands}
     />
   );
 }

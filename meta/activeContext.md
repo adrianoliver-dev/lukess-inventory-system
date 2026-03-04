@@ -5,8 +5,8 @@
 ---
 
 ## CURRENT BLOCK
-- **Block Number:** 16-C-1
-- **Block Name:** Dashboard + Reportes Critical Fixes
+- **Block Number:** 16-C-2
+- **Block Name:** Inventory UX Improvements
 - **Status:** DONE
 - **Started:** 2026-03-04
 - **Completed:** 2026-03-04
@@ -14,22 +14,22 @@
 ---
 
 ## LAST COMPLETED BLOCK
-- **Block Number:** 16-C-1
-- **Block Name:** Dashboard + Reportes Critical Fixes (includes Sub-Block 16-C-1-FIX)
+- **Block Number:** 16-C-2
+- **Block Name:** Inventory UX Improvements
 - **Completed:** 2026-03-04
 - **Commits:** 
-  - `fix(dashboard): stock reservado KPI, split ventas online/físico, global low stock logic, chart colors zinc/gold`
-  - `fix(dashboard): reserved stock query + normalize chart colors to CHART_COLORS`
-  - `fix: robust reserved stock query and normalize chart colors`
-  - `fix(dashboard): auto-discovered correct order status values for reserved stock`
-  - `fix(dashboard): remove org filter from reserved stock to include landing orders`
+  - `feat(inventory): UX improvements — brand autocomplete, mobile polish, compact details`
 
 ---
 
 ### Files Modified
-- `app/(dashboard)/page.tsx` (MODIFIED — fixed reserved stock query to join from orders to order_items)
-- `app/(dashboard)/pedidos/pedidos-client.tsx` (MODIFIED — fixed "Ventas del Mes" logic to check for "entregado" as well as "completed")
-- `app/(dashboard)/reportes/reports-client.tsx` (MODIFIED — added unified CHART_COLORS and normalized all Online elements to dark gray and Físico to gold)
+- `app/(dashboard)/inventario/nuevo/page.tsx` (MODIFIED — added datalist brand fetching)
+- `app/(dashboard)/inventario/[id]/page.tsx` (MODIFIED — added datalist brand fetching)
+- `app/(dashboard)/inventario/nuevo/new-product-form.tsx` (MODIFIED — fixed stock placeholder 0, brand auto-complete)
+- `app/(dashboard)/inventario/[id]/edit-product-form.tsx` (MODIFIED — fixed stock placeholder 0, brand auto-complete)
+- `app/(dashboard)/inventario/inventory-client.tsx` (MODIFIED — hidden columns on mobile screen)
+- `components/dashboard/TopBar.tsx` (MODIFIED — padded title to fix mobile hamburger overlap)
+- `components/ui/ProductQuickView.tsx` (MODIFIED — made UI more compact, removed redundant low stock warnings)
 
 ---
 
@@ -66,6 +66,7 @@
 |---|---|---|---|---|
 | 1to8 | Fundamentals (Roles to Reports) | ✅ DONE | Feb 2026 | — |
 | 16-C-1 | Dashboard + Reportes Critical Fixes | ✅ DONE | 2026-03-04 | TBD |
+| 16-C-2 | Inventory UX Improvements | ✅ DONE | 2026-03-04 | TBD |
 | 9c-A | Inventario: BD + formulario descuentos/is_new | ✅ DONE | 2026-02-27 | 4001f88 |
 | 9c-B | Inventario: Upload múltiples imágenes | ✅ DONE | 2026-02-27 | 9a330bc |
 | 9c-C | Create form parity + is_featured | ✅ DONE | 2026-02-26 | 5bdab26 |

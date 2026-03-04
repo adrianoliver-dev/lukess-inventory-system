@@ -12,7 +12,7 @@ export default async function NuevoProductoPage() {
   const orgId = (profile.organization_id ?? await getDefaultOrgId()) as string | null;
   if (!orgId) redirect("/login");
 
-  const [categoriesResult, locationsResult, productCountResult] =
+  const [categoriesResult, locationsResult, productCountResult, brandsResult] =
     await Promise.all([
       supabase
         .from("categories")
@@ -29,7 +29,14 @@ export default async function NuevoProductoPage() {
         .from("products")
         .select("id", { count: "exact", head: true })
         .eq("organization_id", orgId),
+      supabase
+        .from("products")
+        .select("brand")
+        .eq("organization_id", orgId)
+        .not("brand", "is", null),
     ]);
+
+  const uniqueBrands = Array.from(new Set(brandsResult.data?.map(p => p.brand).filter(Boolean) as string[])).sort();
 
   return (
     <NewProductForm
@@ -37,6 +44,7 @@ export default async function NuevoProductoPage() {
       locations={locationsResult.data || []}
       organizationId={orgId}
       nextProductNumber={(productCountResult.count || 0) + 1}
+      brands={uniqueBrands}
     />
   );
 }
