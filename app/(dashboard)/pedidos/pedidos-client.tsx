@@ -59,7 +59,8 @@ type PaymentFilter = "all" | "qr" | "efectivo" | "tarjeta";
 const STATUS_TABS: { key: "all" | OrderStatus; label: string; icon?: string }[] = [
   { key: "all", label: "Todos" },
   { key: "pending", label: "Pendientes", icon: "🕐" },
-  { key: "reserved", label: "Pago pendiente", icon: "💳" },
+  { key: "pending_payment", label: "Pago pendiente", icon: "💳" },
+  { key: "reserved", label: "Pago pendiente (legacy)", icon: "💳" },
   { key: "confirmed", label: "Confirmados", icon: "✅" },
   { key: "shipped", label: "En camino", icon: "🚚" },
   { key: "completed", label: "Entregados", icon: "🎉" },
@@ -482,9 +483,9 @@ export default function PedidosClient({
       const q = searchQuery.toLowerCase().trim();
       result = result.filter(
         (o) =>
-          o.customer_name.toLowerCase().includes(q) ||
-          o.customer_phone.includes(q) ||
-          o.id.slice(0, 8).toLowerCase().includes(q)
+          (o.customer_name || '').toLowerCase().includes(q) ||
+          (o.customer_phone || '').includes(q) ||
+          (o.id || '').slice(0, 8).toLowerCase().includes(q)
       );
     }
 
@@ -520,9 +521,9 @@ export default function PedidosClient({
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         if (
-          !o.customer_name.toLowerCase().includes(q) &&
-          !o.customer_phone.includes(q) &&
-          !o.id.slice(0, 8).toLowerCase().includes(q)
+          !(o.customer_name || '').toLowerCase().includes(q) &&
+          !(o.customer_phone || '').includes(q) &&
+          !(o.id || '').slice(0, 8).toLowerCase().includes(q)
         )
           return false;
       }
@@ -552,6 +553,7 @@ export default function PedidosClient({
     return {
       all: base.length,
       pending: base.filter((o) => o.status === "pending").length,
+      pending_payment: base.filter((o) => o.status === "pending_payment").length,
       reserved: base.filter((o) => o.status === "reserved").length,
       confirmed: base.filter((o) => o.status === "confirmed").length,
       shipped: base.filter((o) => o.status === "shipped").length,

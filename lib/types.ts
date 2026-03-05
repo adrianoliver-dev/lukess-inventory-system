@@ -396,7 +396,7 @@ export type Database = {
           subtotal: number;
           discount: number;
           total: number;
-          status: "pending" | "reserved" | "confirmed" | "shipped" | "completed" | "cancelled";
+          status: "pending" | "pending_payment" | "reserved" | "confirmed" | "shipped" | "completed" | "cancelled";
           payment_method: string;
           payment_proof: string | null;
           notes: string | null;
@@ -420,7 +420,7 @@ export type Database = {
           subtotal: number;
           discount?: number;
           total: number;
-          status?: "pending" | "reserved" | "confirmed" | "shipped" | "completed" | "cancelled";
+          status?: "pending" | "pending_payment" | "reserved" | "confirmed" | "shipped" | "completed" | "cancelled";
           payment_method?: string;
           payment_proof?: string | null;
           notes?: string | null;
@@ -444,7 +444,7 @@ export type Database = {
           subtotal?: number;
           discount?: number;
           total?: number;
-          status?: "pending" | "reserved" | "confirmed" | "shipped" | "completed" | "cancelled";
+          status?: "pending" | "pending_payment" | "reserved" | "confirmed" | "shipped" | "completed" | "cancelled";
           payment_method?: string;
           payment_proof?: string | null;
           notes?: string | null;
@@ -586,6 +586,7 @@ export type PaymentMethod = Database["public"]["Enums"]["payment_method"];
 
 export type OrderStatus =
   | "pending"
+  | "pending_payment"
   | "reserved"
   | "confirmed"
   | "shipped"
@@ -636,6 +637,13 @@ export const ORDER_STATUS_CONFIG: Record<
     bgColor: "bg-amber-50",
     borderColor: "border-amber-200",
     icon: "🕐",
+  },
+  pending_payment: {
+    label: "Pago pendiente",
+    color: "text-orange-700",
+    bgColor: "bg-orange-50",
+    borderColor: "border-orange-200",
+    icon: "💳",
   },
   reserved: {
     label: "Pago pendiente",

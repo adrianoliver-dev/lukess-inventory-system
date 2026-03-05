@@ -19,11 +19,13 @@
 - **Completed:** 2026-03-05
 - **Commits:**
   - `feat(orders): auto-trigger pickup status emails from dashboard`
+  - `fix(orders): handle null payment_method in client filters` (Hotfix for production crash)
 
 ---
 
 ### Files Modified
 - `app/(dashboard)/pedidos/actions.ts` (MODIFIED — Added `triggerOrderStatusEmail` hook for status updates)
+- `app/(dashboard)/pedidos/pedidos-client.tsx` (MODIFIED — Hotfix: handled null `payment_method` causing crash on toLowerCase)
 - `lib/utils/email-triggers.ts` (NEW — Utility for connecting to Lukess-home external API email triggers)
 - `.env.local` (MODIFIED — Added `NEXT_PUBLIC_LANDING_API_URL`)
 

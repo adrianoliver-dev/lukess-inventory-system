@@ -28,6 +28,7 @@ const STATUS_FLOW: OrderStatus[] = ['pending', 'confirmed', 'shipped', 'complete
 
 const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   pending: ['confirmed', 'cancelled'],
+  pending_payment: ['confirmed', 'cancelled'],
   reserved: ['confirmed', 'cancelled'],
   confirmed: ['shipped', 'cancelled'],
   shipped: ['completed', 'cancelled'],
@@ -249,6 +250,8 @@ export default function OrderDetailModal({
   if (!isOpen || !order) return null
 
   const isTerminal = order.status === 'completed' || order.status === 'cancelled'
+  // Treat pending_payment like reserved for action purposes
+  const effectiveStatus: OrderStatus = (order.status as string) === 'pending_payment' ? 'reserved' : order.status as OrderStatus
 
   async function handleStatusChange(newStatus: OrderStatus) {
     if (!order) return
