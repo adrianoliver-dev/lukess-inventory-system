@@ -507,7 +507,7 @@ export default function PedidosClient({
       };
       const matches = paymentMap[paymentFilter];
       result = result.filter((o) =>
-        matches.some((m) => o.payment_method.toLowerCase().includes(m.toLowerCase()))
+        matches.some((m) => (o.payment_method || '').toLowerCase().includes(m.toLowerCase()))
       );
     }
 
@@ -543,7 +543,7 @@ export default function PedidosClient({
           tarjeta: ["tarjeta", "card", "Tarjeta"],
         };
         const matches = paymentMap[paymentFilter];
-        if (!matches.some((m) => o.payment_method.toLowerCase().includes(m.toLowerCase())))
+        if (!matches.some((m) => (o.payment_method || '').toLowerCase().includes(m.toLowerCase())))
           return false;
       }
       return true;
