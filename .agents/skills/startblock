@@ -1,0 +1,11 @@
+# skill: startblock
+
+## Purpose
+Executed at the start of every new block. Establishes context, reads current state, confirms scope.
+
+## Steps
+1. Read `meta/activeContext.md` — confirm current block and last completed block.
+2. Read `.agents/rules/` — load all active rules before writing any code.
+3. Confirm with user: "I'm about to start Block [X]. Scope: [Y]. Proceed?"
+4. Do NOT write any code until scope is confirmed.
+5. After completing the block, update `meta/activeContext.md` BLOCK HISTORY and commit.

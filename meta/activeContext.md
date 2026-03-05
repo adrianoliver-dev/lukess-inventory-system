@@ -5,27 +5,27 @@
 ---
 
 ## CURRENT BLOCK
-- **Block Number:** 16-C.a.B
-- **Block Name:** Admin Inventory - Thumbnail Upload Field
+- **Block Number:** 17-A-4.2
+- **Block Name:** Auto-trigger pickup flow emails
 - **Status:** DONE
-- **Started:** 2026-03-04
-- **Completed:** 2026-03-04
+- **Started:** 2026-03-05
+- **Completed:** 2026-03-05
 
 ---
 
 ## LAST COMPLETED BLOCK
-- **Block Number:** 16-C.a.B
-- **Block Name:** Admin Inventory - Thumbnail Upload Field
-- **Completed:** 2026-03-04
+- **Block Number:** 17-A-4.2
+- **Block Name:** Auto-trigger pickup flow emails
+- **Completed:** 2026-03-05
 - **Commits:**
-  - `feat(admin): add thumbnail upload field to product form`
-  - `fix(admin): clarify image field labels with specs`
+  - `feat(orders): auto-trigger pickup status emails from dashboard`
 
 ---
 
 ### Files Modified
-- `app/(dashboard)/inventario/nuevo/new-product-form.tsx` (MODIFIED — added thumbnail upload UI, state, and `thumbnail_url` to insert and audit payloads)
-- `app/(dashboard)/inventario/[id]/edit-product-form.tsx` (MODIFIED — added thumbnail upload UI, state, and `thumbnail_url` to update and audit payloads)
+- `app/(dashboard)/pedidos/actions.ts` (MODIFIED — Added `triggerOrderStatusEmail` hook for status updates)
+- `lib/utils/email-triggers.ts` (NEW — Utility for connecting to Lukess-home external API email triggers)
+- `.env.local` (MODIFIED — Added `NEXT_PUBLIC_LANDING_API_URL`)
 
 ---
 
@@ -61,6 +61,7 @@
 | Block | Name | Status | Date | Commit |
 |---|---|---|---|---|
 | 1to8 | Fundamentals (Roles to Reports) | ✅ DONE | Feb 2026 | — |
+| 17-A-4.2 | Auto-trigger pickup flow emails | ✅ DONE | 2026-03-05 | TBD |
 | 16-C-1 | Dashboard + Reportes Critical Fixes | ✅ DONE | 2026-03-04 | TBD |
 | 16-C-2 | Inventory UX Improvements | ✅ DONE | 2026-03-04 | 01d905d |
 | 16-C-3 | Marketing + Users Module Fixes | ✅ DONE | 2026-03-04 | c6daa0c |

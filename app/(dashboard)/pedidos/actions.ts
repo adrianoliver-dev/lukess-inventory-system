@@ -8,6 +8,7 @@ import { sendOrderStatusEmail } from '@/lib/notifications'
 import type { OrderForEmail, OrderItemForEmail } from '@/lib/notifications'
 import { sendOrderStatusWhatsApp } from '@/lib/whatsapp'
 import type { OrderForWhatsApp } from '@/lib/whatsapp'
+import { triggerOrderStatusEmail } from '@/lib/utils/email-triggers'
 
 type OrderQueryResult = {
   id: string
@@ -41,6 +42,15 @@ export async function updateOrderStatus(
   cancellationReason?: string
 ) {
   try {
+    // Obtener estado anterior
+    const { data: currentOrder } = await supabaseAdmin
+      .from('orders')
+      .select('status, delivery_method, payment_method, pickup_location')
+      .eq('id', orderId)
+      .single()
+
+    const oldStatus = currentOrder?.status
+
     // Validar autenticación y permisos con el cliente de sesión
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
@@ -140,6 +150,20 @@ export async function updateOrderStatus(
           })),
         }
         await sendOrderStatusEmail(orderForEmail, newStatus)
+
+        if (currentOrder) {
+          triggerOrderStatusEmail({
+            orderId: raw.id,
+            customerName: raw.customer_name,
+            customerEmail: raw.customer_email || '',
+            oldStatus: oldStatus || undefined,
+            newStatus: newStatus,
+            deliveryMethod: currentOrder.delivery_method || 'delivery',
+            paymentMethod: currentOrder.payment_method || undefined,
+            pickupLocation: currentOrder.pickup_location || undefined,
+            cancellationReason: cancellationReason?.trim() || undefined,
+          }).catch((err) => console.error('[triggerOrderStatusEmail] Error en background:', err))
+        }
 
         const orderForWhatsApp: OrderForWhatsApp = {
           id: raw.id,

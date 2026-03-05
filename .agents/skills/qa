@@ -1,0 +1,16 @@
+# skill: qa
+
+## Purpose
+Run after every code block before committing. Prevents regressions.
+
+## Checklist
+- [ ] TypeScript: no `any`, explicit return types on all functions
+- [ ] No `framer-motion` imports (use `motion/react`)
+- [ ] Tailwind: no hardcoded colors outside CSS variables
+- [ ] Supabase: any new column → `database.types.ts` regenerated
+- [ ] WhatsApp number: ONLY via `process.env.NEXT_PUBLIC_WHATSAPP_NUMBER` (never hardcoded)
+- [ ] No `console.log` left in production code
+- [ ] No DB column renames without a SQL migration first
+- [ ] App Router only — no `getServerSideProps`, no `pages/` directory usage
+- [ ] Server Components by default — `'use client'` only when strictly necessary
+- [ ] After migration: run `supabase gen types typescript` and update `types/database.types.ts`
