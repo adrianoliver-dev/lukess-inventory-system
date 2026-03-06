@@ -291,7 +291,7 @@ export default function ReportesVentasClient({
           .filter((o) => o.canal === "online" || o.canal === null)
           .reduce((s, o) => s + o.total, 0),
         Físico: dayOrders.filter((o) => o.canal === "fisico").reduce((s, o) => s + o.total, 0),
-        Descuento: dayOrders.reduce((s, o) => s + ((o.discount_amount ?? 0) > 0 ? (o.discount_amount ?? 0) : (o.discount ?? 0)), 0),
+        Descuento: dayOrders.reduce((s, o) => s + (o.discount_amount ?? 0), 0),
       };
     });
   }, [orders, desde, hasta]);
@@ -398,10 +398,7 @@ export default function ReportesVentasClient({
   // ── Discount impact (Gross, Net, Discount) ──────────────────────────────────
   const ingresosNetos = totalRevenue; // Suma de 'total' pagado por el cliente
 
-  const totalDescuentos = useMemo(() => orders.reduce((s, o) => {
-    const discountValue = (o.discount_amount ?? 0) > 0 ? (o.discount_amount ?? 0) : (o.discount ?? 0);
-    return s + discountValue;
-  }, 0), [orders]);
+  const totalDescuentos = useMemo(() => orders.reduce((s, o) => s + (o.discount_amount ?? 0), 0), [orders]);
 
   const ingresosBrutos = ingresosNetos + totalDescuentos; // Lo que hubiera costado sin descuento
   const descuentoPct = ingresosBrutos > 0 ? (totalDescuentos / ingresosBrutos) * 100 : 0;

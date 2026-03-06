@@ -5,25 +5,25 @@
 ---
 
 ## CURRENT BLOCK
-- **Block Number:** 17-B-A-3.1 (Fix)
-- **Block Name:** Skip Confirmed State for Cash on Pickup
+- **Block Number:** 17-D (Final)
+- **Block Name:** Minor Report Fixes (Discounts and Joins)
 - **Status:** DONE
 - **Completed:** 2026-03-05
 
 ---
 
 ## LAST COMPLETED BLOCK
-- **Block Number:** 17-B-A-3.1 (Fix)
-- **Block Name:** Skip Confirmed State for Cash on Pickup
+- **Block Number:** 17-D (Final)
+- **Block Name:** Minor Report Fixes (Discounts and Joins)
 - **Completed:** 2026-03-05
 - **Commits:**
-  - SI: `fix(orders): skip confirmed state for cash_on_pickup orders`
+  - SI: `fix(reportes): remove redundant filters and fix discount calculations`
 
 ---
 
 ### Files Modified
-- **SI:** `app/(dashboard)/pedidos/order-detail-modal.tsx` (MODIFIED — Updated `StatusDropdown` and `getActionButtons` to skip 'confirmed' state for cash_on_pickup orders)
-- **SI:** `app/(dashboard)/pedidos/actions.ts` (MODIFIED — Added backend validation in `updateOrderStatus` to prevent 'confirmed' state for cash_on_pickup orders)
+- **SI:** `app/(dashboard)/reportes/page.tsx` (MODIFIED — Removed redundant `sales.canal` filter in `sale_items` join)
+- **SI:** `app/(dashboard)/reportes/reports-client.tsx` (MODIFIED — Fixed discount logic `totalDescuentos` and chart parsing to exclusively use `discount_amount`)
 
 ---
 

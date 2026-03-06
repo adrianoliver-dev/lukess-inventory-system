@@ -187,9 +187,8 @@ export default async function ReportesPage({
     salesIds.length > 0
       ? supabase
         .from("sale_items")
-        .select("product_id, quantity, subtotal, sale_id, sales!inner(canal), products(id, name, category_id, categories(name))")
+        .select("product_id, quantity, subtotal, sale_id, products(id, name, category_id, categories(name))")
         .in("sale_id", salesIds)
-        .eq("sales.canal", "fisico")
       : Promise.resolve({ data: [] })
   ]);
 
