@@ -14,42 +14,68 @@ type EmailTriggerData = {
 }
 
 export async function triggerOrderStatusEmail(data: EmailTriggerData): Promise<void> {
-    // Only send emails for pickup orders with specific transitions
-    if (data.deliveryMethod !== 'pickup') return
+    const {
+        deliveryMethod,
+        paymentMethod,
+        newStatus,
+        orderId,
+        customerName,
+        customerEmail,
+        pickupLocation,
+        cancellationReason,
+        customCancellationReason
+    } = data
 
     let emailType: string | null = null
-    let emailData: Record<string, unknown> = {}
+    let emailData: Record<string, unknown> = {
+        orderId,
+        customerName,
+        customerEmail,
+    }
 
-    // Determine which email to send based on status transition
-    if (data.oldStatus === 'pending_payment' && data.newStatus === 'confirmed') {
-        emailType = 'pickup_payment_confirmed'
-        emailData = {
-            orderId: data.orderId,
-            customerName: data.customerName,
-            customerEmail: data.customerEmail,
-            pickupLocationName: data.pickupLocation || 'Mercado Mutualista',
+    // Delivery flow (QR only for now)
+    if (deliveryMethod === 'delivery') {
+        if (newStatus === 'pending') emailType = 'order_confirmation'
+        if (newStatus === 'confirmed') emailType = 'order_paid'
+        if (newStatus === 'shipped') emailType = 'order_shipped'
+        if (newStatus === 'completed') emailType = 'order_completed'
+        if (newStatus === 'cancelled') {
+            emailType = 'order_cancelled'
+            emailData.cancellationReason = cancellationReason || 'other'
+            emailData.customCancellationReason = customCancellationReason
         }
-    } else if (
-        (data.oldStatus === 'confirmed' || data.oldStatus === 'pending') &&
-        data.newStatus === 'shipped'
-    ) {
-        emailType = 'pickup_ready_for_collection'
-        emailData = {
-            orderId: data.orderId,
-            customerName: data.customerName,
-            customerEmail: data.customerEmail,
-            pickupLocationName: data.pickupLocation || 'Mercado Mutualista',
-            pickupLocationAddress: 'Pasillo B3, Puesto 3', // TODO: Get from PICKUP_LOCATIONS
-            expiresInHours: 48,
+    }
+
+    // Pickup flow
+    if (deliveryMethod === 'pickup') {
+        if (paymentMethod === 'cash_on_pickup' || paymentMethod === 'efectivo' || paymentMethod === 'cash') {
+            if (newStatus === 'pending_payment') emailType = 'pickup_reservation_received'
+            if (newStatus === 'ready_for_pickup' || newStatus === 'shipped') {
+                emailType = 'pickup_ready_for_collection'
+                emailData.pickupLocationName = pickupLocation || 'Mercado Mutualista'
+                emailData.pickupLocationAddress = 'Pasillo B3, Puesto 3'
+                emailData.expiresInHours = 48
+            }
+            if (newStatus === 'completed') emailType = 'pickup_completed'
+        } else {
+            // Pickup + QR
+            if (newStatus === 'pending') emailType = 'pickup_order_received'
+            if (newStatus === 'confirmed') {
+                emailType = 'pickup_payment_confirmed'
+                emailData.pickupLocationName = pickupLocation || 'Mercado Mutualista'
+            }
+            if (newStatus === 'ready_for_pickup' || newStatus === 'shipped') {
+                emailType = 'pickup_ready_for_collection'
+                emailData.pickupLocationName = pickupLocation || 'Mercado Mutualista'
+                emailData.pickupLocationAddress = 'Pasillo B3, Puesto 3'
+                emailData.expiresInHours = 48
+            }
+            if (newStatus === 'completed') emailType = 'pickup_completed'
         }
-    } else if (data.newStatus === 'cancelled') {
-        emailType = 'order_cancelled'
-        emailData = {
-            orderId: data.orderId,
-            customerName: data.customerName,
-            customerEmail: data.customerEmail,
-            cancellationReason: data.cancellationReason || 'other',
-            customCancellationReason: data.customCancellationReason,
+        if (newStatus === 'cancelled') {
+            emailType = 'order_cancelled'
+            emailData.cancellationReason = cancellationReason || 'other'
+            emailData.customCancellationReason = customCancellationReason
         }
     }
 
@@ -69,7 +95,7 @@ export async function triggerOrderStatusEmail(data: EmailTriggerData): Promise<v
             const error = await response.json()
             console.error('[triggerOrderStatusEmail] API error:', error)
         } else {
-            console.log(`[triggerOrderStatusEmail] Sent ${emailType} for order ${data.orderId}`)
+            console.log(`[triggerOrderStatusEmail] Sent ${emailType} for order ${orderId}`)
         }
     } catch (err) {
         console.error('[triggerOrderStatusEmail] Exception:', err)

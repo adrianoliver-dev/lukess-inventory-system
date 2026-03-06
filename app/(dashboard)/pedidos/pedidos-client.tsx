@@ -59,11 +59,9 @@ type PaymentFilter = "all" | "qr" | "efectivo" | "tarjeta";
 const STATUS_TABS: { key: "all" | OrderStatus; label: string; icon?: string }[] = [
   { key: "all", label: "Todos" },
   { key: "pending", label: "Pendientes", icon: "🕐" },
-  { key: "pending_payment", label: "Pago pendiente", icon: "💳" },
-  { key: "reserved", label: "Pago pendiente (legacy)", icon: "💳" },
-  { key: "confirmed", label: "Confirmados", icon: "✅" },
-  { key: "shipped", label: "En camino", icon: "🚚" },
-  { key: "completed", label: "Entregados", icon: "🎉" },
+  { key: "confirmed", label: "Pago Confirmado", icon: "✅" },
+  { key: "shipped", label: "En camino / Listo", icon: "🚚" },
+  { key: "completed", label: "Completados", icon: "🎉" },
   { key: "cancelled", label: "Cancelados", icon: "❌" },
 ];
 
@@ -483,7 +481,11 @@ export default function PedidosClient({
     }
 
     if (activeTab !== "all") {
-      result = result.filter((o) => o.status === activeTab);
+      if (activeTab === "pending") {
+        result = result.filter((o) => ["pending", "pending_payment", "reserved"].includes(o.status));
+      } else {
+        result = result.filter((o) => o.status === activeTab);
+      }
     }
 
     if (searchQuery.trim()) {
@@ -560,16 +562,17 @@ export default function PedidosClient({
       return true;
     });
 
-    return {
+    const counts: Record<OrderStatus | "all", number> = {
       all: base.length,
-      pending: base.filter((o) => o.status === "pending").length,
-      pending_payment: base.filter((o) => o.status === "pending_payment").length,
-      reserved: base.filter((o) => o.status === "reserved").length,
+      pending: base.filter((o) => ["pending", "pending_payment", "reserved"].includes(o.status)).length,
+      pending_payment: 0,
+      reserved: 0,
       confirmed: base.filter((o) => o.status === "confirmed").length,
       shipped: base.filter((o) => o.status === "shipped").length,
       completed: base.filter((o) => o.status === "completed").length,
       cancelled: base.filter((o) => o.status === "cancelled").length,
     };
+    return counts;
   }, [orders, deliveryTab, searchQuery, dateFilter, paymentFilter]);
 
   return (
