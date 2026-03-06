@@ -126,6 +126,7 @@ export async function updateOrderStatus(
           gps_distance_km,
           subtotal,
           total,
+          discount_code_id,
           order_items (
             quantity,
             unit_price,
@@ -138,7 +139,7 @@ export async function updateOrderStatus(
         .single()
 
       if (orderData) {
-        const raw = orderData as unknown as OrderQueryResult & { delivery_method: string; payment_method: string; whatsapp_last_status_sent: string | null }
+        const raw = orderData as unknown as OrderQueryResult & { delivery_method: string; payment_method: string; whatsapp_last_status_sent: string | null; discount_code_id: string | null }
 
         triggerOrderStatusEmail({
           orderId: raw.id,
@@ -157,7 +158,8 @@ export async function updateOrderStatus(
         if (raw.whatsapp_last_status_sent !== newStatus) {
 
           let discountCodeForMeta: string | undefined = undefined;
-          if (newStatus === 'completed') {
+          // Generate a post-purchase loyalty code ONLY if they didn't already use one
+          if (newStatus === 'completed' && !raw.discount_code_id) {
             discountCodeForMeta = await generateWelcomeBackDiscount(raw.id, raw.customer_email);
           }
 

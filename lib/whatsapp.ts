@@ -24,7 +24,7 @@ const ENTREGADO_HEADER_IMAGE =
 export function getWhatsAppTemplate(
   order: OrderForWhatsApp,
   newStatus: string,
-  nextPurchaseDiscountCode: string = 'GRACIAS10'
+  nextPurchaseDiscountCode?: string
 ): WhatsAppTemplateConfig | null {
 
   const orderNumber = order.id.substring(0, 8).toUpperCase();
@@ -75,9 +75,16 @@ export function getWhatsAppTemplate(
       };
 
     case 'completed':
+      if (nextPurchaseDiscountCode) {
+        return {
+          templateName: 'pedido_entregado',
+          variables: [orderNumber, name, nextPurchaseDiscountCode], // {{1}}=order, {{2}}=name, {{3}}=discount
+          headerImage: ENTREGADO_HEADER_IMAGE
+        };
+      }
       return {
-        templateName: 'pedido_entregado',
-        variables: [orderNumber, name, nextPurchaseDiscountCode], // {{1}}=order, {{2}}=name, {{3}}=discount
+        templateName: 'pedido_entregado_simple',
+        variables: [orderNumber, name], // {{1}}=order, {{2}}=name
         headerImage: ENTREGADO_HEADER_IMAGE
       };
 

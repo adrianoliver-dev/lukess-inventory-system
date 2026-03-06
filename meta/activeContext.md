@@ -5,26 +5,26 @@
 ---
 
 ## CURRENT BLOCK
-- **Block Number:** 17-E.2
-- **Block Name:** Dynamic Discounts & WhatsApp Router Hotfixes
+- **Block Number:** 17-E.3
+- **Block Name:** Conditional Loyalty Discounts & 3-Day Expiry
 - **Status:** DONE
 - **Completed:** 2026-03-06
 
 ---
 
 ## LAST COMPLETED BLOCK
-- **Block Number:** 17-E.2
-- **Block Name:** Dynamic Discounts & WhatsApp Router Hotfixes
+- **Block Number:** 17-E.3
+- **Block Name:** Conditional Loyalty Discounts & 3-Day Expiry
 - **Completed:** 2026-03-06
 - **Commits:**
-  - SI: `feat(whatsapp): dynamic discount generation and template fixes`
+  - SI: `feat(whatsapp): conditional loyalty discounts with 3-day expiry`
 
 ---
 
 ### Files Modified
-- **SI:** `lib/whatsapp.ts` (MODIFIED — fixed `pedido_reservado_pago_en_tienda_` template name and adapted signature)
-- **SI:** `lib/utils/discounts.ts` (NEW — created `generateWelcomeBackDiscount` helper)
-- **SI:** `app/(dashboard)/pedidos/actions.ts` (MODIFIED — injected dynamic discount into the `completed` sequence WhatsApp handler)
+- **SI:** `lib/utils/discounts.ts` (MODIFIED — changed expiry from 7 days to 3 days)
+- **SI:** `app/(dashboard)/pedidos/actions.ts` (MODIFIED — only generates welcome discount if `discount_code_id` is null on the current order)
+- **SI:** `lib/whatsapp.ts` (MODIFIED — falls back to `pedido_entregado_simple` template if no discount code is provided)
 
 ---
 

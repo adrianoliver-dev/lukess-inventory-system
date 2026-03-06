@@ -10,7 +10,7 @@ export async function generateWelcomeBackDiscount(orderId: string, customerEmail
         max_uses: 1,
         is_active: true,
         assigned_email: customerEmail?.toLowerCase().trim() || null,
-        expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+        expires_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString()
     })
 
     // 23505 is the unique key violation code in Postgres. 
