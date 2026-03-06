@@ -124,18 +124,28 @@ function StatusStepper({ status }: { status: OrderStatus }) {
 }
 
 function StatusDropdown({
-  currentStatus,
+  order,
   onSelect,
   disabled,
 }: {
-  currentStatus: OrderStatus
+  order: OrderWithItems
   onSelect: (s: OrderStatus) => void
   disabled: boolean
 }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+
+  const currentStatus = order.status as OrderStatus
   const cfg = ORDER_STATUS_CONFIG[currentStatus]
-  const nextStatuses = VALID_TRANSITIONS[currentStatus]
+  let nextStatuses = VALID_TRANSITIONS[currentStatus] || []
+
+  const isCashOnPickup = order.delivery_method === 'pickup' &&
+    (order.payment_method === 'cash_on_pickup' || order.payment_method === 'efectivo' || order.payment_method === 'cash')
+
+  if (isCashOnPickup && (currentStatus === 'pending' || currentStatus === 'pending_payment' || (currentStatus as string) === 'reserved')) {
+    nextStatuses = ['shipped', 'cancelled']
+  }
+
   const canChange = !disabled && nextStatuses.length > 0
 
   useEffect(() => {
@@ -344,14 +354,19 @@ export default function OrderDetailModal({
 
     const actions: { status: OrderStatus; label: string; variant: 'primary' | 'danger' }[] = []
 
-    if (s === 'pending') {
-      actions.push({ status: 'confirmed', label: '✅ Confirmar pago', variant: 'primary' })
-      actions.push({ status: 'cancelled', label: '❌ Cancelar', variant: 'danger' })
-    } else if (s === 'reserved') {
-      actions.push({ status: 'confirmed', label: '✅ Confirmar pago', variant: 'primary' })
+    const isCashOnPickup = order.delivery_method === 'pickup' &&
+      (order.payment_method === 'cash_on_pickup' || order.payment_method === 'efectivo' || order.payment_method === 'cash')
+
+    if (s === 'pending' || (s as string) === 'reserved' || s === 'pending_payment') {
+      if (isCashOnPickup) {
+        actions.push({ status: 'shipped', label: '📦 Marcar listo para recoger', variant: 'primary' })
+      } else {
+        actions.push({ status: 'confirmed', label: '✅ Confirmar pago', variant: 'primary' })
+      }
       actions.push({ status: 'cancelled', label: '❌ Cancelar', variant: 'danger' })
     } else if (s === 'confirmed') {
-      actions.push({ status: 'shipped', label: '🚚 Marcar como enviado', variant: 'primary' })
+      const shipLabel = order.delivery_method === 'pickup' ? '📦 Marcar listo para recoger' : '🚚 Marcar como enviado'
+      actions.push({ status: 'shipped', label: shipLabel, variant: 'primary' })
       actions.push({ status: 'cancelled', label: '❌ Cancelar', variant: 'danger' })
     } else if (s === 'shipped') {
       actions.push({ status: 'completed', label: '🎉 Marcar completado', variant: 'primary' })
@@ -407,7 +422,7 @@ export default function OrderDetailModal({
               <p className="text-xs text-gray-400 mt-0.5">{formatDate(order.created_at)}</p>
               <div className="mt-2">
                 <StatusDropdown
-                  currentStatus={order.status as OrderStatus}
+                  order={order}
                   onSelect={handleStatusChange}
                   disabled={!canEdit || loadingStatus !== null}
                 />

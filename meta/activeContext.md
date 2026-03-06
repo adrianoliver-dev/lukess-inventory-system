@@ -5,26 +5,25 @@
 ---
 
 ## CURRENT BLOCK
-- **Block Number:** 17-B-A-2 (Fix)
-- **Block Name:** Fix Timezone and Duplicate Sales in Reports
+- **Block Number:** 17-B-A-3.1 (Fix)
+- **Block Name:** Skip Confirmed State for Cash on Pickup
 - **Status:** DONE
 - **Completed:** 2026-03-05
 
 ---
 
 ## LAST COMPLETED BLOCK
-- **Block Number:** 17-B-A-2 (Fix)
-- **Block Name:** Fix Timezone and Duplicate Sales in Reports
+- **Block Number:** 17-B-A-3.1 (Fix)
+- **Block Name:** Skip Confirmed State for Cash on Pickup
 - **Completed:** 2026-03-05
 - **Commits:**
-  - `fix(dashboard): use Bolivia GMT-4 timezone and prevent duplicate sales in reports`
+  - SI: `fix(orders): skip confirmed state for cash_on_pickup orders`
 
 ---
 
 ### Files Modified
-- `lib/utils/timezone.ts` (NEW — Added Bolivia timezone utility)
-- `app/(dashboard)/page.tsx` (MODIFIED — Updated queries to use GMT-4 date boundaries)
-- `app/(dashboard)/reportes/page.tsx` (MODIFIED — Excluded online orders from POS sales logic)
+- **SI:** `app/(dashboard)/pedidos/order-detail-modal.tsx` (MODIFIED — Updated `StatusDropdown` and `getActionButtons` to skip 'confirmed' state for cash_on_pickup orders)
+- **SI:** `app/(dashboard)/pedidos/actions.ts` (MODIFIED — Added backend validation in `updateOrderStatus` to prevent 'confirmed' state for cash_on_pickup orders)
 
 ---
 

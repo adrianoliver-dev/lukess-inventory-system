@@ -49,6 +49,15 @@ export async function updateOrderStatus(
 
     const oldStatus = currentOrder?.status
 
+    const isCashOnPickup = currentOrder?.delivery_method === 'pickup' &&
+      (currentOrder?.payment_method === 'cash_on_pickup' ||
+        currentOrder?.payment_method === 'efectivo' ||
+        currentOrder?.payment_method === 'cash')
+
+    if (isCashOnPickup && newStatus === 'confirmed') {
+      return { error: 'Los pedidos con pago en efectivo al recoger saltan el estado Confirmado. Marca como "Listo para recoger" directamente.' }
+    }
+
     // Validar autenticación y permisos con el cliente de sesión
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
