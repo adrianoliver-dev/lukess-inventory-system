@@ -77,13 +77,13 @@ export function getWhatsAppTemplate(
         return {
           templateName: 'pedido_entregado',
           variables: [orderNumber, name, nextPurchaseDiscountCode],
-          headerImage: 'https://lukess-home.vercel.app/images/entregado.png'
+          headerImage: 'https://lrcggpdgrqltqbxqnjgh.supabase.co/storage/v1/object/public/banners/whatsapp/entregado.png'
         };
       }
       return {
         templateName: 'pedido_entregado_simple',
         variables: [orderNumber, name],
-        headerImage: 'https://lukess-home.vercel.app/images/entregado.png'
+        headerImage: 'https://lrcggpdgrqltqbxqnjgh.supabase.co/storage/v1/object/public/banners/whatsapp/entregado.png'
       };
 
     case 'cancelled':
