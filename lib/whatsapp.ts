@@ -55,7 +55,7 @@ export function getWhatsAppTemplate(
         };
       }
       return {
-        templateName: 'pago_confirmado_u',
+        templateName: 'pago_confirmado',
         variables: [orderNumber, name] // {{1}}=order, {{2}}=name
       };
 
@@ -86,7 +86,7 @@ export function getWhatsAppTemplate(
 
     case 'cancelled':
       return {
-        templateName: 'pedido_cancelado_u',
+        templateName: 'pedido_cancelado',
         variables: [orderNumber, name, order.cancellation_reason ?? 'Motivo no especificado']
       };
 
