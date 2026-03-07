@@ -5,24 +5,24 @@
 ---
 
 ## CURRENT BLOCK
-- **Block Number:** 17-O
-- **Block Name:** Fix WhatsApp Meta API Image & Cancelled Template Name
+- **Block Number:** 17-Q
+- **Block Name:** Sync WhatsApp Header Image to Supabase
 - **Status:** DONE
 - **Completed:** 2026-03-07
 
 ---
 
 ## LAST COMPLETED BLOCK
-- **Block Number:** 17-O
-- **Block Name:** Fix WhatsApp Meta API Image & Cancelled Template Name
+- **Block Number:** 17-Q
+- **Block Name:** Sync WhatsApp Header Image to Supabase
 - **Completed:** 2026-03-07
 - **Commits:**
-  - SI: `fix(whatsapp): pass header image to landing api and fix cancelled name` (ba08f6b)
+  - SI: `fix(whatsapp): sync header image url to supabase storage to bypass 132012`
 
 ---
 
 ### Files Modified
-- **SI:** `C:\LukessHome\lukess-inventory-system\lib\whatsapp.ts` (MODIFIED — Added `headerImage` back to `completed` templates and updated `cancelled` template name to `pedido_cancelado_u` to match Meta API formats)
+- **SI:** `C:\LukessHome\lukess-inventory-system\lib\whatsapp.ts` (MODIFIED — Replaced hardcoded `headerImage` URLs with the Supabase public URL `https://lrcggpdgrqltqbxqnjgh.supabase.co/storage/v1/object/public/banners/whatsapp/entregado.png` to bypass Vercel bot protection/Error 132012)
 
 ---
 
@@ -88,5 +88,7 @@
 | 15-C | Pre-Production Root Cleanup | ✅ DONE | 2026-03-03 | 1ad0c99 |
 | 17-N | Fix Email UI & Meta API Formatting | ✅ DONE | 2026-03-07 | d36ae3b |
 | 17-O | Fix WhatsApp Meta API Image & Cancelled Template Name | ✅ DONE | 2026-03-07 | ba08f6b |
+| 17-P | Final WhatsApp Meta API Template Fix | ✅ DONE | 2026-03-07 | TBD |
+| 17-Q | Sync WhatsApp Header Image to Supabase | ✅ DONE | 2026-03-07 | TBD |
 | 16-A | Deep Code Cleanup (Logs & Dead Code) | ✅ DONE | 2026-03-03 | f2007b7 |
 | 11-F | Dynamic Attributes (Database Analysis) | ✅ DONE | 2026-03-03 | — |
