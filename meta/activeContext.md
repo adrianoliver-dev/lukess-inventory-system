@@ -5,28 +5,25 @@
 ---
 
 ## CURRENT BLOCK
-- **Block Number:** 17-G (Final)
-- **Block Name:** Webhook URL Fix & Flow Polish
+- **Block Number:** 17-H
+- **Block Name:** Bulletproof Webhooks & Payload Alignment
 - **Status:** DONE
 - **Completed:** 2026-03-06
 
 ---
 
 ## LAST COMPLETED BLOCK
-- **Block Number:** 17-G (Final)
-- **Block Name:** Webhook URL Fix & Flow Polish
+- **Block Number:** 17-H
+- **Block Name:** Bulletproof Webhooks & Payload Alignment
 - **Completed:** 2026-03-06
 - **Commits:**
-  - SI: `fix(pedidos): cash-on-pickup stock modal + whatsapp error logging + URL normalization`
-  - LH: `fix(mis-pedidos): pickup shipped status shows Listo para recojo`
+  - SI: `fix(webhooks): pass full order payload to email trigger + independent WA try/catch`
 
 ---
 
 ### Files Modified
-- **SI:** `lib/utils/email-triggers.ts` (MODIFIED — switched to server-only `LANDING_URL`, added trailing-slash trimming, upgraded `!res.ok` error logging to include status + raw body)
-- **SI:** `lib/whatsapp.ts` (MODIFIED — added trailing-slash trimming for `LANDING_URL`, added `console.log` of URL + template before each fetch)
-- **SI:** `app/(dashboard)/pedidos/pedidos-client.tsx` (MODIFIED — stock modal now opens for cash-on-pickup→shipped via `confirmModalTargetStatus` state)
-- **LH:** `app/mis-pedidos/page.tsx` (MODIFIED — `shipped` label for pickup orders shows "Listo para recojo 🏪")
+- **SI:** `lib/utils/email-triggers.ts` (MODIFIED — added `EmailOrderItem` interface, expanded `EmailTriggerData` with financial fields, now forwards `total`, `subtotal`, `shippingCost`, `discountAmount`, `items` to Landing `/api/send-email`)
+- **SI:** `app/(dashboard)/pedidos/actions.ts` (MODIFIED — passes all financial order fields to `triggerOrderStatusEmail`; wrapped WhatsApp send in independent `try/catch` so WA failure never prevents email)
 
 ---
 

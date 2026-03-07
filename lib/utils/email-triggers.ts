@@ -9,6 +9,7 @@ interface EmailOrderItem {
     quantity: number
     size?: string | null
     color?: string | null
+    image_url?: string | null
 }
 
 type EmailTriggerData = {
@@ -22,12 +23,14 @@ type EmailTriggerData = {
     pickupLocation?: string
     cancellationReason?: string
     customCancellationReason?: string
-    // Full order financials — required by the Landing's buildCostBreakdown()
+    // Full order financials — required by the Landing’s buildCostBreakdown()
     total?: number
     subtotal?: number
     shippingCost?: number
     discountAmount?: number
     items?: EmailOrderItem[]
+    // Loyalty discount code shown in completion emails
+    discountCode?: string
 }
 
 export async function triggerOrderStatusEmail(data: EmailTriggerData): Promise<void> {
@@ -116,6 +119,8 @@ export async function triggerOrderStatusEmail(data: EmailTriggerData): Promise<v
                     discountAmount: data.discountAmount,
                     // Items for the product list in the email body
                     items: data.items ?? [],
+                    // Loyalty discount code for completion emails
+                    discountCode: data.discountCode,
                     // Contextual fields
                     deliveryMethod: deliveryMethod as 'delivery' | 'pickup',
                     pickupLocationName: pickupLocation || 'Mercado Mutualista', // Default if not provided

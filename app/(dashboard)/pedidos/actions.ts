@@ -29,7 +29,7 @@ type OrderQueryResult = {
     unit_price: number
     size: string | null
     color: string | null
-    products: { name: string } | null
+    products: { name: string; image_url: string | null } | null
   }[]
 }
 
@@ -132,7 +132,7 @@ export async function updateOrderStatus(
             unit_price,
             size,
             color,
-            products ( name )
+            products ( name, image_url )
           )
         `)
         .eq('id', orderId)
@@ -144,6 +144,18 @@ export async function updateOrderStatus(
         // ── Email trigger ─────────────────────────────────────────────────────
         // Fire-and-forget; pass the FULL financial payload so Landing buildCostBreakdown()
         // never crashes with undefined.toFixed()
+
+        // Generate loyalty discount code ONCE upfront so both Email and WhatsApp can use it.
+        // Only generate if order is completed AND no existing discount was used on this order.
+        let discountCodeForEmail: string | undefined = undefined
+        if (newStatus === 'completed' && !raw.discount_code_id) {
+          try {
+            discountCodeForEmail = await generateWelcomeBackDiscount(raw.id, raw.customer_email)
+          } catch (discountErr) {
+            console.error('[generateWelcomeBackDiscount] Error:', discountErr)
+          }
+        }
+
         triggerOrderStatusEmail({
           orderId: raw.id,
           customerName: raw.customer_name,
@@ -158,19 +170,20 @@ export async function updateOrderStatus(
           total: raw.total ?? 0,
           subtotal: raw.subtotal ?? raw.total ?? 0,
           shippingCost: raw.shipping_cost ?? 0,
-          items: raw.order_items ?? [],
+          items: (raw.order_items ?? []).map((item) => ({
+            ...item,
+            image_url: item.products?.image_url ?? null,
+          })),
+          // Loyalty code for the completion email
+          discountCode: discountCodeForEmail,
         }).catch((err) => console.error('[triggerOrderStatusEmail] Error:', err))
 
         // ── WhatsApp trigger ──────────────────────────────────────────────────
         // Fully independent from Email: if WA fails, email still fires.
         if (raw.whatsapp_last_status_sent !== newStatus) {
           try {
-            let discountCodeForMeta: string | undefined = undefined;
-            // Generate a post-purchase loyalty code ONLY if they didn't already use one
-            if (newStatus === 'completed' && !raw.discount_code_id) {
-              discountCodeForMeta = await generateWelcomeBackDiscount(raw.id, raw.customer_email);
-            }
-
+            // Reuse the discount code already generated for Email above.
+            // For non-completed statuses discountCodeForEmail is undefined, which is correct.
             const orderForWhatsApp: OrderForWhatsApp = {
               id: raw.id,
               customer_name: raw.customer_name,
@@ -184,7 +197,7 @@ export async function updateOrderStatus(
               cancellation_reason: cancellationReason?.trim() || null,
             }
 
-            await sendOrderStatusWhatsApp(orderForWhatsApp, newStatus, discountCodeForMeta)
+            await sendOrderStatusWhatsApp(orderForWhatsApp, newStatus, discountCodeForEmail)
             // Mark WA as sent ONLY after successful dispatch
             await supabaseAdmin.from('orders').update({ whatsapp_last_status_sent: newStatus }).eq('id', raw.id)
           } catch (waErr) {
