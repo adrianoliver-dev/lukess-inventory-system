@@ -427,6 +427,7 @@ export default function PedidosClient({
   const QUICK_ACTIONS: Partial<Record<OrderStatus, { nextStatus: OrderStatus; label: string; icon: string }>> = {
     pending: { nextStatus: "confirmed", label: "Confirmar", icon: "✅" },
     reserved: { nextStatus: "confirmed", label: "Confirmar pago", icon: "✅" },
+    pending_payment: { nextStatus: "shipped", label: "Listo para recoger", icon: "🏪" },
     confirmed: { nextStatus: "shipped", label: "Marcar enviado", icon: "🚚" },
     shipped: { nextStatus: "completed", label: "Completado", icon: "🎉" },
   };
@@ -1048,7 +1049,9 @@ export default function PedidosClient({
               {/* Header */}
               <div className="sticky top-0 bg-white border-b border-gray-100 rounded-t-2xl px-6 py-4 flex items-center justify-between">
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900">✅ Confirmar pago</h2>
+                  <h2 className="text-lg font-bold text-gray-900">
+                    {confirmModalTargetStatus === 'shipped' ? '🏪 Listo para recoger' : '✅ Confirmar pago'}
+                  </h2>
                   <p className="text-xs text-gray-500 font-mono mt-0.5">
                     #{confirmModalOrder.id.slice(0, 8).toUpperCase()}
                   </p>
