@@ -156,7 +156,12 @@ export async function updateOrderStatus(
           }
         }
 
+        let logMsg = `[DEBUG] raw.notify_email is ${raw.notify_email} (${typeof raw.notify_email})`;
         if (raw.notify_email && raw.customer_email) {
+          logMsg += ` -> ENTERED IF BLOCK`;
+          // We also update the database so we can see it in production
+          await supabaseAdmin.from('orders').update({ internal_notes: logMsg }).eq('id', orderId);
+
           triggerOrderStatusEmail({
             orderId: raw.id,
             customerName: raw.customer_name,
@@ -178,6 +183,9 @@ export async function updateOrderStatus(
             // Loyalty code for the completion email
             discountCode: discountCodeForEmail,
           }).catch((err) => console.error('[triggerOrderStatusEmail] Error:', err))
+        } else {
+          logMsg += ` -> SKIPPED EMAIL BLOCK`;
+          await supabaseAdmin.from('orders').update({ internal_notes: logMsg }).eq('id', orderId);
         }
 
         // ── WhatsApp trigger ──────────────────────────────────────────────────
