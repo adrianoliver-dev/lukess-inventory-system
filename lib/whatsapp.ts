@@ -68,7 +68,7 @@ export function getWhatsAppTemplate(
     case 'shipped':
       if (isPickup) {
         return {
-          templateName: 'pedido_listo_recojo',
+          templateName: 'pedido_listo_recojo_uti',
           variables: [orderNumber, name, cleanText(order.pickup_location) || 'tienda'] // {{3}}=location
         };
       }
