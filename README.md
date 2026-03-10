@@ -1,41 +1,56 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lukess Inventory System — POS & Inventory Management
+
+A custom internal management platform for a multi-location retail clothing business.
+Built as a solo project alongside the Lukess Home e-commerce platform.
+
+> ⚠️ This is a private internal tool. The demo credentials are read-only.
+
+🔗 **Live Demo:** [lukess-inventory-system.vercel.app](https://lukess-inventory-system.vercel.app)
+
+## Features
+
+- **POS (Point of Sale)** with product search and quick sale flow
+- **Inventory management** across 3 physical locations
+- **RBAC** — Admin, Manager, and Staff roles with granular permissions
+- **Real-time notifications** via Supabase Realtime
+- **Order management** with status tracking and fulfillment flow
+- **Sales reports** with filters by date, location, and product
+- **Low stock alerts** with configurable thresholds
+- Mobile-optimized dashboard
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router) |
+| Language | TypeScript |
+| Database | Supabase (PostgreSQL) |
+| Auth | Supabase Auth + RBAC |
+| Realtime | Supabase Realtime |
+| Styling | Tailwind CSS v4 |
+| Deployment | Vercel |
+
+## Architecture
+
+- **14-table PostgreSQL schema** with foreign keys and RLS policies per role
+- **Server Actions** for all mutations (sales, stock updates, order status)
+- **Role-based middleware** protecting dashboard routes
+- **Optimistic updates** on POS sales flow for instant UX
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+git clone https://github.com/adrianoliver-dev/lukess-inventory-system
+cd lukess-inventory-system
+npm install
+cp .env.example .env.local
+# Fill in your Supabase credentials
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Environment Variables
+text
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+Developer
+Adrian Oliver · adrianoliver.dev · Santa Cruz de la Sierra, Bolivia
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-=======
-# lukess-inventory-system
-Sistema de inventario multi-ubicación para retail
->>>>>>> c07fcbaa6bddac9180aaaf582fea5a521d7b9168
