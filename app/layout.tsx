@@ -20,6 +20,13 @@ export const metadata: Metadata = {
   title: "Lukess Home | Sistema de Inventario",
   description: "Sistema profesional de gestión de inventario y ventas",
   keywords: ["inventario", "ventas", "POS", "gestión", "Bolivia"],
+  robots: {
+    index: false,
+    follow: false,
+  },
+  verification: {
+    google: "hAGIOlZimw756caps3CoODkM8yOwq_zXdj_JBxYosj4",
+  },
 };
 
 export default function RootLayout({
